@@ -357,14 +357,30 @@
     }
 
     /* ---------- Hero ---------- */
+    /* Первый экран — светлый.
+       Чтобы поставить фото фоном: положите файл в images/ и раскомментируйте
+       --hero-photo ниже, например url('images/hero.jpg'). */
     .hero {
       position: relative;
       min-height: 88svh;
       display: flex;
       align-items: center;
-      background: linear-gradient(180deg, #0A2E36 0%, #0E4750 38%, #1A6B6E 62%, #C97B4A 100%);
+      /* --hero-photo: url('images/hero.jpg'); */
+      background:
+        var(--hero-photo, none) center/cover no-repeat,
+        linear-gradient(180deg, #FBF8F1 0%, #F6EAD6 42%, #F0DCC0 72%, #E8CEA9 100%);
       overflow: hidden;
-      color: #fff;
+      color: var(--ink);
+    }
+
+    /* Светлая вуаль поверх фото, чтобы текст всегда читался */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(251, 248, 241, .72) 0%, rgba(251, 248, 241, .42) 55%, rgba(251, 248, 241, .12) 100%);
     }
 
     .hero-art {
@@ -383,11 +399,11 @@
     }
 
     .hero .eyebrow {
-      color: var(--gold)
+      color: var(--ochre)
     }
 
     .hero .eyebrow::before {
-      background: var(--gold)
+      background: var(--ochre)
     }
 
     .hero h1 {
@@ -399,12 +415,12 @@
 
     .hero h1 em {
       font-style: normal;
-      color: var(--gold)
+      color: var(--apricot)
     }
 
     .hero p {
       font-size: clamp(1rem, 1.5vw, 1.14rem);
-      color: rgba(255, 255, 255, .88);
+      color: rgba(14, 42, 48, .78);
       max-width: 580px
     }
 
@@ -424,15 +440,25 @@
 
     .hero-badges div {
       font-size: .8rem;
-      color: rgba(255, 255, 255, .8)
+      color: rgba(14, 42, 48, .68)
     }
 
     .hero-badges b {
       display: block;
       font-family: 'Unbounded', sans-serif;
       font-size: 1.2rem;
-      color: #fff;
+      color: var(--sea-deep);
       font-weight: 600
+    }
+
+    /* Прозрачная кнопка на светлом фоне */
+    .hero .btn.ghost {
+      border-color: rgba(14, 42, 48, .32);
+      color: var(--ink)
+    }
+
+    .hero .btn.ghost:hover {
+      background: rgba(14, 42, 48, .07)
     }
 
     /* ---------- Marquee ---------- */
@@ -599,10 +625,75 @@
       background: var(--gold)
     }
 
+    /* Достопримечательности — карусель в один ряд */
+    .g-carousel {
+      position: relative
+    }
+
     .g-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px
+      --g-cols: 4;
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding-bottom: 4px
+    }
+
+    .g-grid::-webkit-scrollbar {
+      display: none
+    }
+
+    .g-grid>.g-tile {
+      flex: 0 0 calc((100% - (var(--g-cols) - 1) * 18px) / var(--g-cols));
+      scroll-snap-align: start
+    }
+
+    .g-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 8px 24px rgba(10, 30, 35, .28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .25s, transform .2s
+    }
+
+    .g-nav:hover {
+      transform: translateY(-50%) scale(1.08)
+    }
+
+    .g-nav svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round
+    }
+
+    .g-nav.prev {
+      left: -18px
+    }
+
+    .g-nav.next {
+      right: -18px
+    }
+
+    .g-nav[disabled] {
+      opacity: 0;
+      pointer-events: none
     }
 
     .g-tile {
@@ -863,7 +954,7 @@
       }
 
       .g-grid {
-        grid-template-columns: 1fr 1fr 1fr
+        --g-cols: 3
       }
 
       .why-grid {
@@ -951,7 +1042,15 @@
       }
 
       .g-grid {
-        grid-template-columns: 1fr 1fr
+        --g-cols: 2
+      }
+
+      .g-nav.prev {
+        left: 4px
+      }
+
+      .g-nav.next {
+        right: 4px
       }
 
       .why-grid {
@@ -1621,6 +1720,87 @@
       gap: 14px
     }
 
+    /* --- Пакеты как вкладки: инфа только выбранного пакета --- */
+    .pkg-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px
+    }
+
+    .pkg-tab {
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px 16px;
+      transition: border-color .2s, box-shadow .2s, background .2s
+    }
+
+    .pkg-tab:hover {
+      border-color: var(--apricot)
+    }
+
+    .pkg-tab.on {
+      border-color: var(--apricot);
+      box-shadow: 0 0 0 1px var(--apricot);
+      background: #FFF8F1
+    }
+
+    .pkg-tab .pt-name {
+      display: block;
+      font-family: 'Unbounded', sans-serif;
+      font-size: .84rem;
+      margin-bottom: 4px
+    }
+
+    .pkg-tab .pt-price {
+      display: block;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.2rem;
+      color: var(--sea-deep)
+    }
+
+    .pkg-tab .pt-per {
+      display: block;
+      font-size: .7rem;
+      font-weight: 600;
+      color: rgba(14, 42, 48, .5)
+    }
+
+    .pkg-pane {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 18px;
+      margin-bottom: 8px
+    }
+
+    .pkg-pane-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px
+    }
+
+    .pkg-pane .pp {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.45rem;
+      color: var(--sea-deep)
+    }
+
+    .pkg-pane .pp small {
+      font-family: 'Manrope', sans-serif;
+      font-size: .72rem;
+      font-weight: 600;
+      color: rgba(14, 42, 48, .5);
+      display: block
+    }
+
     .pkg {
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -1727,6 +1907,10 @@
       }
 
       .two-col {
+        grid-template-columns: 1fr
+      }
+
+      .pkg-tabs {
         grid-template-columns: 1fr
       }
 
@@ -1841,8 +2025,8 @@
   <div class="topbar">
     <div class="wrap">
       <div class="contacts">
-        <a href="tel:+77000000000">+7 700 000 00 00</a>
-        <a href="mailto:hello@visitaktau.kz" class="hide-m-x">hello@visitaktau.kz</a>
+        <a href="tel:+77080137780">+7 708 013 77 80</a>
+        <a href="mailto:visitaktau7@gmail.com" class="hide-m-x">visitaktau7@gmail.com</a>
         <span class="hide-m"><a href="#contact">WhatsApp · Telegram</a></span>
       </div>
       <div class="contacts"><span data-i18n="top.hours"></span></div>
@@ -1898,17 +2082,17 @@
   <!-- ============ HERO ============ -->
   <header class="hero" id="top">
     <svg class="hero-art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <circle cx="1050" cy="430" r="120" fill="#F4C98A" opacity=".9" />
-      <circle cx="1050" cy="430" r="190" fill="#F4C98A" opacity=".14" />
+      <circle cx="1050" cy="430" r="120" fill="#F2A35E" opacity=".55" />
+      <circle cx="1050" cy="430" r="190" fill="#F2A35E" opacity=".12" />
       <path
         d="M0 560 L180 545 L260 500 L300 500 L340 545 L640 555 L760 510 L830 510 L900 555 L1440 560 L1440 900 L0 900 Z"
-        fill="#0E4750" opacity=".7" />
+        fill="#EBDCC0" opacity=".9" />
       <path
         d="M0 660 L120 640 L200 560 L240 555 L290 640 L520 655 L600 580 L660 575 L720 650 L1000 660 L1100 600 L1170 595 L1250 655 L1440 662 L1440 900 L0 900 Z"
-        fill="#0A3640" />
-      <rect x="0" y="700" width="1440" height="200" fill="#072A31" />
-      <path d="M0 700 Q360 690 720 700 T1440 700 L1440 900 L0 900 Z" fill="#062228" />
-      <g opacity=".5" fill="#F4C98A">
+        fill="#DFC9A4" />
+      <rect x="0" y="700" width="1440" height="200" fill="#D6BC92" />
+      <path d="M0 700 Q360 690 720 700 T1440 700 L1440 900 L0 900 Z" fill="#CBAE80" />
+      <g opacity=".45" fill="#FBF8F1">
         <rect x="990" y="712" width="120" height="4" rx="2" opacity=".8" />
         <rect x="1010" y="728" width="80" height="4" rx="2" opacity=".6" />
         <rect x="975" y="746" width="150" height="4" rx="2" opacity=".45" />
@@ -2076,7 +2260,15 @@
         </div>
         <a class="more-link" href="#builder" data-i18n="pl.more"></a>
       </div>
-      <div class="g-grid" id="placesGrid"></div>
+      <div class="g-carousel reveal">
+        <button class="g-nav prev" type="button" id="placesPrev" aria-label="←">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="g-grid" id="placesGrid"></div>
+        <button class="g-nav next" type="button" id="placesNext" aria-label="→">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -2269,7 +2461,7 @@
        НАСТРОЙКИ / SETTINGS — меняйте здесь
        ============================================================ */
     // Номер WhatsApp в международном формате, только цифры:
-    const WA_NUMBER = '77000000000';
+    const WA_NUMBER = '77080137780';
     // Курс для пересчёта тенге → доллар (цены однодневных туров):
     const KZT_PER_USD = 540;
 
@@ -2315,7 +2507,7 @@
       'nav.car': ['Машина', 'Көлік', 'Car', '越野车'],
       'nav.impressions': ['Впечатления', 'Әсерлер', 'Experiences', '精彩体验'],
       'nav.attractions': ['Достопримечательности', 'Көрікті жерлер', 'Attractions', '景点'],
-      'nav.builder': ['Построй свой тур', 'Өз туыңды құрастыр', 'Build your tour', '定制专属线路'],
+      'nav.builder': ['Построй свой тур', 'Өз турыңды құрастыр', 'Build your tour', '定制专属线路'],
       'nav.about': ['О нас', 'Біз туралы', 'About us', '关于我们'],
       'nav.faq': ['FAQ', 'Сұрақ-жауап', 'FAQ', '常见问题'],
       'nav.cta': ['Подобрать тур', 'Тур таңдау', 'Find my tour', '为我推荐'],
@@ -2398,7 +2590,7 @@
 
       /* ---------- Конструктор ---------- */
       'bd.eyebrow': ['Конструктор', 'Конструктор', 'Tour builder', '行程定制'],
-      'bd.title': ['Построй свой идеальный тур', 'Өзіңнің мінсіз туыңды құрастыр', 'Build your perfect tour', '定制你的完美行程'],
+      'bd.title': ['Построй свой идеальный тур', 'Өзіңнің мінсіз турыңды құрастыр', 'Build your perfect tour', '定制你的完美行程'],
       'bd.lead': [
         'Отметьте локации, которые хотите увидеть, выберите количество дней — и заявка вместе с вашими пожеланиями уйдёт нам в WhatsApp.',
         'Көргіңіз келетін нысандарды белгілеңіз, күн санын таңдаңыз — өтінім тілектеріңізбен бірге бізге WhatsApp арқылы жіберіледі.',
@@ -2445,7 +2637,7 @@
         'Every one of these places appears in our routes — and in the tour builder above.',
         '以上景点均包含在我们的线路中，也可在上方的行程定制工具里选择。'],
       'pl.more': ['Собрать маршрут →', 'Маршрут жасау →', 'Build a route →', '定制线路 →'],
-      'gal.torysh': ['Торыш — долина шаров', 'Торыш — шар аңғары', 'Torysh — Valley of Balls', '托雷什 — 石球谷'],
+      'gal.torysh': ['Торыш — долина шаров', 'Торыш шарлар алқабы', 'Torysh — Valley of Balls', '托雷什 — 石球谷'],
       'gal.airakty': ['Айракты — долина замков', 'Айрақты — қамалдар аңғары', 'Airakty — Valley of Castles', '艾拉克特 — 城堡谷'],
       'gal.caspian': ['Каспийское побережье', 'Каспий жағалауы', 'The Caspian coast', '里海海岸'],
 
@@ -2502,12 +2694,12 @@
         'Message us on WhatsApp or Telegram — we reply within an hour and send a programme built around your dates and budget.',
         '通过 WhatsApp 或 Telegram 联系我们——我们会在一小时内回复，并根据您的日期与预算发送行程方案。'],
       'ct.wa': ['Написать в WhatsApp', 'WhatsApp-қа жазу', 'Message on WhatsApp', '通过 WhatsApp 联系'],
-      'ct.build': ['Построить свой тур', 'Өз туыңды құрастыру', 'Build your own tour', '定制专属行程'],
+      'ct.build': ['Построить свой тур', 'Өз турыңды құрастыру', 'Build your own tour', '定制专属行程'],
       'ct.note': [
-        'hello@visitaktau.kz · +7 700 000 00 00 · г. Актау, Мангистауская область',
-        'hello@visitaktau.kz · +7 700 000 00 00 · Ақтау қаласы, Маңғыстау облысы',
-        'hello@visitaktau.kz · +7 700 000 00 00 · Aktau, Mangystau region',
-        'hello@visitaktau.kz · +7 700 000 00 00 · 哈萨克斯坦 曼吉斯套州 阿克陶市'],
+        'visitaktau7@gmail.com · +7 708 013 77 80 · г. Актау, Мангистауская область',
+        'visitaktau7@gmail.com · +7 708 013 77 80 · Ақтау қаласы, Маңғыстау облысы',
+        'visitaktau7@gmail.com · +7 708 013 77 80 · Aktau, Mangystau region',
+        'visitaktau7@gmail.com · +7 708 013 77 80 · 哈萨克斯坦 曼吉斯套州 阿克陶市'],
       'ft.tagline': [
         'Местный лицензированный туроператор в Мангистауской области. Индивидуальные и групповые джип-туры.',
         'Маңғыстау облысындағы жергілікті лицензияланған туроператор. Жеке және топтық джип-турлар.',
@@ -2663,7 +2855,7 @@
       sultan_epe: ['Султан-Эпе', 'Сұлтан-Епе', 'Sultan-Epe', '苏丹埃佩'],
       shopan_ata: ['Шопан-Ата', 'Шопан-Ата', 'Shopan-Ata', '绍潘阿塔'],
       beket_ata: ['Бекет-Ата', 'Бекет-Ата', 'Beket-Ata', '别克特阿塔'],
-      blue_lagoon: ['Голубая Лагуна', 'Көгілдір Лагуна', 'Blue Lagoon', '蓝色泻湖'],
+      blue_lagoon: ['Голубая Лагуна', 'Көгілдір шығанағы', 'Blue Lagoon', '蓝色泻湖'],
       sandy_cape: ['Мыс Песчаный', 'Песчаный мүйісі', 'Sandy Cape', '桑迪角'],
       onere: ['Онере', 'Өнере', 'Onere', '奥内雷'],
       karynzharyk: ['Карынжарык', 'Қарынжарық', 'Karynzharyk', '卡伦扎雷克'],
@@ -2695,6 +2887,8 @@
     const ordPoint = i => li === 3 ? ('第 ' + i + ' 站') : (t('c.point') + ' ' + i);
     const numFmt = n => n.toLocaleString(LOCALE[LANGS[li]]);
     const usd = kzt => '$' + (Math.round(kzt / KZT_PER_USD / 5) * 5);
+    // цена тура в долларах: явное поле usd имеет приоритет над пересчётом из тенге
+    const tourUsd = x => x.usd ? '$' + x.usd : usd(x.kzt);
     const kztFmt = n => numFmt(n) + ' ₸';
 
     /* ============================================================
@@ -2758,44 +2952,44 @@
        ============================================================ */
     const ONE_DAY = [
       {
-        id: 'd1', art: 'canyon', photo: '', kzt: 140000,
+        id: 'd1', usd: 299, art: 'canyon', photo: '', kzt: 161000,
         title: ['Впадина Карагия, Кызылкуп и Бозжыра', 'Қарақия ойысы, Қызылқұп және Бозжыра',
           'Karagiye Depression, Kyzylkup and Bozzhyra', '卡拉吉耶洼地、克孜勒库普与博兹吉拉'],
         locations: ['karagiya', 'kyzylkup', 'bozzhyra_up', 'bozzhyra_mid'],
         includes: ['inc.lunchVc', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd2', art: 'sherkala', photo: '', kzt: 140000,
+        id: 'd2', usd: 299, art: 'sherkala', photo: '', kzt: 161000,
         title: ['Торыш, Акеспе, Кокала, Шеркала, Айракты', 'Торыш, Ақеспе, Көкала, Шерқала, Айрақты',
           'Torysh, Akespe, Kokala, Sherkala, Airakty', '托雷什、阿克斯佩、科卡拉、舍尔卡拉、艾拉克特'],
         locations: ['torysh', 'akespe', 'kokala', 'sherkala', 'airakty'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd3', art: 'salt', photo: '', kzt: 140000,
+        id: 'd3', usd: 299, art: 'salt', photo: '', kzt: 161000,
         title: ['Караман-Ата, Ыбыкты-сай, Тузбаир', 'Қараман-Ата, Ыбықты сай, Тұзбайыр',
           'Karaman-Ata, Ybykty-sai, Tuzbair', '卡拉曼阿塔、伊贝克特峡谷、图兹拜尔'],
         locations: ['karaman_ata', 'ybykty_sai', 'tuzbair'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd4', art: 'mosque', photo: '', kzt: 140000,
+        id: 'd4', usd: 299, art: 'mosque', photo: '', kzt: 161000,
         title: ['Жыгылган, Капамсай, Шакпак-Ата, Султан-Епе', 'Жығылған, Қапамсай, Шақпақ-Ата, Сұлтан-Епе',
           'Zhygylgan, Kapamsai, Shakpak-Ata, Sultan-Epe', '日格尔甘、卡帕姆赛、沙克帕克阿塔、苏丹埃佩'],
         locations: ['zhygylgan', 'kapamsai', 'shakpak_ata', 'sultan_epe'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd5', art: 'castles', photo: '', kzt: 140000,
+        id: 'd5', usd: 299, art: 'castles', photo: '', kzt: 161000,
         title: ['Шопан-Ата, Бекет-Ата, Бозжыра и Кызылкуп', 'Шопан-Ата, Бекет-Ата, Бозжыра және Қызылқұп',
           'Shopan-Ata, Beket-Ata, Bozzhyra and Kyzylkup', '绍潘阿塔、别克特阿塔、博兹吉拉与克孜勒库普'],
         locations: ['shopan_ata', 'beket_ata', 'bozzhyra_up', 'kyzylkup'],
         includes: ['inc.lunchVc', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd6', art: 'lagoon', photo: '', kzt: 110000, choose: true,
+        id: 'd6', usd: 239, art: 'lagoon', photo: '', kzt: 129000, choose: true,
         tag: ['Пляжный дзен', 'Жағажай дзені', 'Beach Zen', '海滩禅意'],
-        title: ['Пляжный дзен: Голубая Лагуна или Мыс Песчаный', 'Жағажай дзені: Көгілдір Лагуна немесе Песчаный мүйісі',
+        title: ['Пляжный дзен: Голубая Лагуна или Мыс Песчаный', 'Жағажай дзені: Көгілдір шығанағы немесе Песчаный мүйісі',
           'Beach Zen: Blue Lagoon or Sandy Cape', '海滩禅意：蓝色泻湖或桑迪角'],
         locations: ['blue_lagoon', 'sandy_cape'],
         includes: ['inc.jeep', 'inc.hotDinner', 'inc.drinks']
@@ -2963,7 +3157,7 @@
         q: ['Можно ли составить свой маршрут?', 'Өз маршрутымды жасауға бола ма?',
           'Can I put together my own route?', '可以自己安排线路吗？'],
         a: ['Да. Воспользуйтесь конструктором «Построй свой идеальный тур»: отметьте локации, укажите количество дней и пожелания — заявка придёт нам в WhatsApp, и мы вернёмся с программой и стоимостью.',
-          'Иә. «Өзіңнің мінсіз туыңды құрастыр» конструкторын пайдаланыңыз: нысандарды белгілеп, күн санын және тілектеріңізді көрсетіңіз — өтінім бізге WhatsApp арқылы келеді, біз бағдарлама мен құнын жібереміз.',
+          'Иә. «Өзіңнің мінсіз турыңды құрастыр» конструкторын пайдаланыңыз: нысандарды белгілеп, күн санын және тілектеріңізді көрсетіңіз — өтінім бізге WhatsApp арқылы келеді, біз бағдарлама мен құнын жібереміз.',
           'Yes. Use the “Build your perfect tour” builder: tick the locations, set the number of days and add your notes — the request reaches our WhatsApp and we come back with a programme and a price.',
           '可以。请使用“定制你的完美行程”工具：勾选景点、设定天数并填写备注——申请将发送到我们的 WhatsApp，我们会回复具体行程与报价。']
       },
@@ -3018,9 +3212,7 @@
           <div class="tcard-art">${media(x)}<span class="tcard-tag">${dayWord(x.days)}</span></div>
           <div class="tcard-body">
             <h3>${tr(x.title)}</h3>
-            <p class="tcard-meta">${dayWord(x.days)} <i>•</i> ≈ ${numFmt(x.km)} ${t('unit.km')} <i>•</i> ${t('c.threePkg')}</p>
-            <p class="locs">${x.plan.map((d, i) => `<b>${ordDay(i + 1)}:</b> ${locs(d)}`).join('<br>')}</p>
-            <p style="font-size:.8rem;color:rgba(14,42,48,.55);margin-bottom:14px">${t('c.threePkgLong')}</p>
+            <p class="tcard-meta">${dayWord(x.days)}</p>
             <div class="tcard-foot">
               <p class="price">${fromPrice(PRICES[x.days].eco + ' $')}<span class="price-sub">${t('c.perPerson')}</span></p>
               <button class="btn dark" type="button" data-multi-open="${x.id}">${t('c.details')}</button>
@@ -3041,7 +3233,7 @@
             <p class="tcard-meta">${locWord(x.locations.length)} <i>•</i> ${t('c.fromAktau')}</p>
             <ul class="incl">${list(x.includes)}</ul>
             <div class="tcard-foot">
-              <p class="price">${usd(x.kzt)}<span class="price-sub">${kztFmt(x.kzt)} ${t('c.perJeep')}</span></p>
+              <p class="price">${tourUsd(x)}<span class="price-sub">${kztFmt(x.kzt)} ${t('c.perJeep')}</span></p>
               <button class="btn dark" type="button" data-book-oneday="${x.id}">${t('c.book')}</button>
             </div>
           </div>
@@ -3100,11 +3292,33 @@
        ============================================================ */
     function renderGallery() {
       document.getElementById('placesGrid').innerHTML = GALLERY.map(g => `
-        <div class="g-tile reveal">
+        <div class="g-tile">
           ${g.photo ? `<img src="${g.photo}" alt="" loading="lazy">` : artSvg(g.art)}
           <span>${g.ui ? t(g.key) : loc(g.key)}</span>
         </div>`).join('');
+      updateGalleryNav();
     }
+
+    /* Карусель достопримечательностей */
+    const gTrack = document.getElementById('placesGrid');
+    const gPrev = document.getElementById('placesPrev');
+    const gNext = document.getElementById('placesNext');
+
+    function galleryStep() {
+      const tile = gTrack.querySelector('.g-tile');
+      return tile ? tile.getBoundingClientRect().width + 18 : gTrack.clientWidth;
+    }
+
+    function updateGalleryNav() {
+      const max = gTrack.scrollWidth - gTrack.clientWidth - 1;
+      gPrev.disabled = gTrack.scrollLeft <= 0;
+      gNext.disabled = gTrack.scrollLeft >= max;
+    }
+
+    gPrev.addEventListener('click', () => gTrack.scrollBy({ left: -galleryStep(), behavior: 'smooth' }));
+    gNext.addEventListener('click', () => gTrack.scrollBy({ left: galleryStep(), behavior: 'smooth' }));
+    gTrack.addEventListener('scroll', updateGalleryNav, { passive: true });
+    window.addEventListener('resize', updateGalleryNav);
 
     /* ============================================================
        FAQ
@@ -3222,33 +3436,52 @@
         `<div class="day"><b>${ordDay(i + 1)}</b><p>${locs(d)}</p></div>`).join('')}</div>
 
         <h3 class="m-sub">${t('c.threePkgTitle')}</h3>
-        <div class="pkg-grid">
-          ${PKG_KEYS.map((k, i) => {
-          const nm = t(PACKAGES[k].name);
-          return `<div class="pkg${i === 1 ? ' best' : ''}">
-              <h4>${nm}</h4>
-              <p class="pp">${pr[k]} $<small>${t('c.perPerson')}</small></p>
-              <a class="btn dark" style="font-size:.82rem;padding:10px 18px" target="_blank" rel="noopener"
-                 href="${waLink(`${t('wa.bookTour')} «${title}» (${dayWord(x.days)}), ${t('wa.pkgWord')} «${nm}» — ${pr[k]} $ / ${t('c.perPerson')}.`)}">${t('c.book')}</a>
-            </div>`;
-        }).join('')}
+        <div class="pkg-tabs" role="tablist">
+          ${PKG_KEYS.map(k => `
+            <button type="button" class="pkg-tab" role="tab" data-pkg="${k}" aria-selected="false">
+              <span class="pt-name">${t(PACKAGES[k].name)}</span>
+              <span class="pt-price">${pr[k]} $</span>
+              <span class="pt-per">${t('c.perPerson')}</span>
+            </button>`).join('')}
         </div>
-
-        <h3 class="m-sub">${t('c.inclExcl')}</h3>
-        ${PKG_KEYS.map(k => `
-          <p class="b-group-label" style="color:var(--ochre);margin-top:20px">${t('c.pkgLabel')} «${t(PACKAGES[k].name)}»</p>
-          <div class="two-col">
-            <div><p style="font-weight:700;font-size:.86rem;margin-bottom:8px">${t('c.inclTitle')}</p>
-              <ul class="incl">${list(PACKAGES[k].inc)}</ul></div>
-            <div><p style="font-weight:700;font-size:.86rem;margin-bottom:8px">${t('c.exclTitle')}</p>
-              <ul class="incl no">${list(PACKAGES[k].exc)}</ul></div>
-          </div>`).join('')}
+        <div class="pkg-pane" id="pkgPane"></div>
 
         <div class="modal-cta">
           <a class="btn wa" target="_blank" rel="noopener"
              href="${waLink(`${t('wa.bookTour')} «${title}» (${dayWord(x.days)}).`)}">${WA_SVG}${t('c.bookWa')}</a>
           <a class="btn line" href="#builder" data-close>${t('c.customize')}</a>
         </div>`);
+      showPkg(x, curPkg);
+    }
+
+    /* Пакеты в модалке — вкладки: показываем информацию только выбранного пакета */
+    let curPkg = 'std';
+
+    function showPkg(x, key) {
+      curPkg = PKG_KEYS.includes(key) ? key : 'std';
+      const pane = document.getElementById('pkgPane');
+      if (!pane) return;
+      modalBody.querySelectorAll('.pkg-tab').forEach(b => {
+        const on = b.dataset.pkg === curPkg;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      const pkg = PACKAGES[curPkg], nm = t(pkg.name), pr = PRICES[x.days], title = tr(x.title);
+      pane.innerHTML = `
+        <div class="pkg-pane-head">
+          <div>
+            <p class="b-group-label" style="color:var(--ochre);margin:0">${t('c.pkgLabel')} «${nm}»</p>
+            <p class="pp">${pr[curPkg]} $<small>${t('c.perPerson')}</small></p>
+          </div>
+          <a class="btn dark" style="font-size:.82rem;padding:10px 18px" target="_blank" rel="noopener"
+             href="${waLink(`${t('wa.bookTour')} «${title}» (${dayWord(x.days)}), ${t('wa.pkgWord')} «${nm}» — ${pr[curPkg]} $ / ${t('c.perPerson')}.`)}">${t('c.book')}</a>
+        </div>
+        <div class="two-col">
+          <div><p style="font-weight:700;font-size:.86rem;margin-bottom:8px">${t('c.inclTitle')}</p>
+            <ul class="incl">${list(pkg.inc)}</ul></div>
+          <div><p style="font-weight:700;font-size:.86rem;margin-bottom:8px">${t('c.exclTitle')}</p>
+            <ul class="incl no">${list(pkg.exc)}</ul></div>
+        </div>`;
     }
 
     function openOneDay(id) {
@@ -3259,7 +3492,7 @@
       show(media(x), `
         <p class="eyebrow">${t('c.oneTour')}</p>
         <h2 id="modalTitle">${title}</h2>
-        <p class="modal-price">${usd(x.kzt)} <small>${kztFmt(x.kzt)} ${t('c.perJeepFull')}</small></p>
+        <p class="modal-price">${tourUsd(x)} <small>${kztFmt(x.kzt)} ${t('c.perJeepFull')}</small></p>
         <div class="m-meta">
           <span>${t('c.oneDay')}</span>
           <span>${t('c.startAktau')}</span>
@@ -3275,11 +3508,16 @@
 
         <div class="modal-cta">
           <a class="btn wa" target="_blank" rel="noopener"
-             href="${waLink(`${t('wa.bookDay')} «${title}» — ${kztFmt(x.kzt)} (${usd(x.kzt)}) ${t('c.perJeep')}.`)}">${WA_SVG}${t('c.bookWa')}</a>
+             href="${waLink(`${t('wa.bookDay')} «${title}» — ${kztFmt(x.kzt)} (${tourUsd(x)}) ${t('c.perJeep')}.`)}">${WA_SVG}${t('c.bookWa')}</a>
         </div>`);
     }
 
     document.addEventListener('click', e => {
+      const tab = e.target.closest('.pkg-tab');
+      if (tab && openTour && openTour.kind === 'multi') {
+        showPkg(MULTI_DAY.find(m => m.id === openTour.id), tab.dataset.pkg);
+        return;
+      }
       const md = e.target.closest('[data-multi-open]');
       if (md) { openMulti(md.dataset.multiOpen); return; }
       const card = e.target.closest('[data-multi]');

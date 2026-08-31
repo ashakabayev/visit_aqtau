@@ -812,11 +812,24 @@
 
     /* ---------- CTA ---------- */
     .cta {
-      background: linear-gradient(135deg, #0A3B43 0%, #14555C 55%, #9C5B33 130%);
+      background:
+        linear-gradient(135deg, rgba(10, 59, 67, .92) 0%, rgba(20, 85, 92, .86) 55%, rgba(156, 91, 51, .88) 130%),
+        url('images/loc/bozzhyra-night.jpg') center/cover no-repeat,
+        linear-gradient(135deg, #0A3B43 0%, #14555C 55%, #9C5B33 130%);
       color: #fff;
       text-align: center;
       position: relative;
       overflow: hidden;
+    }
+
+    @supports (background-image: image-set(url('images/loc/bozzhyra-night.webp') type('image/webp'))) {
+      .cta {
+        background:
+          linear-gradient(135deg, rgba(10, 59, 67, .92) 0%, rgba(20, 85, 92, .86) 55%, rgba(156, 91, 51, .88) 130%),
+          image-set(url('images/loc/bozzhyra-night.webp') type('image/webp'),
+            url('images/loc/bozzhyra-night.jpg') type('image/jpeg')) center/cover no-repeat,
+          linear-gradient(135deg, #0A3B43 0%, #14555C 55%, #9C5B33 130%);
+      }
     }
 
     .cta .wrap {
@@ -1101,6 +1114,15 @@
     /* ============ ADDED: spec components ============ */
 
     /* --- Photo slot inside cards (drop real photos into TOURS data) --- */
+    .tcard-art picture,
+    .g-tile picture,
+    .modal-hero picture,
+    .rent .r-photo picture {
+      display: block;
+      width: 100%;
+      height: 100%
+    }
+
     .tcard-art img,
     .g-tile img {
       width: 100%;
@@ -1292,19 +1314,55 @@
       flex-direction: column
     }
 
-    .rent .r-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      background: var(--chalk);
-      display: grid;
-      place-items: center;
-      margin-bottom: 16px
+    .rent .r-photo {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      margin: -26px -26px 18px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      overflow: hidden;
+      background: var(--chalk)
     }
 
-    .rent .r-icon svg {
-      width: 24px;
-      height: 24px;
+    .rent .r-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .5s
+    }
+
+    .rent:hover .r-photo img {
+      transform: scale(1.04)
+    }
+
+    /* карточка без фото — иконка по центру на песочном фоне */
+    .rent .r-photo.empty {
+      display: grid;
+      place-items: center;
+      background: linear-gradient(140deg, #F6EAD6, #E8CEA9)
+    }
+
+    .rent .r-photo-art {
+      width: 58px;
+      height: 58px;
+      opacity: .5
+    }
+
+    /* студийные снимки техники — вписываем целиком на белом */
+    .rent .r-photo.fit {
+      background: #fff
+    }
+
+    .rent .r-photo.fit img {
+      object-fit: contain;
+      padding: 12px
+    }
+
+    .rent:hover .r-photo.fit img {
+      transform: scale(1.03)
+    }
+
+    .rent .r-photo svg {
       fill: none;
       stroke: var(--sea-deep);
       stroke-width: 1.7;
@@ -2910,9 +2968,10 @@
     const kztFmt = n => numFmt(n) + ' ₸';
 
     /* ============================================================
-       ФОТО. Чтобы поставить настоящее фото вместо иллюстрации,
-       положите файл в папку images/ и укажите путь в поле photo:
-       например  photo: 'images/bozzhyra.jpg'
+       ФОТО. Настоящие снимки лежат в images/loc/ (jpg + webp рядом).
+       Чтобы заменить или добавить — положите файл туда и укажите путь
+       в поле photo, например  photo: 'images/loc/bozzhyra.jpg'.
+       Если photo пустое — рисуется запасная SVG-иллюстрация из ART.
        ============================================================ */
     const ART = {
       canyon: `<rect width="400" height="200" fill="#E8A06B"/><circle cx="320" cy="46" r="26" fill="#FBE3BC"/>
@@ -2963,49 +3022,52 @@
         <path d="M0 182 L400 176 L400 200 L0 200 Z" fill="#EFE0BE"/>`
     };
     const artSvg = key => `<svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[key] || ART.canyon}</svg>`;
-    const media = o => o.photo ? `<img src="${o.photo}" alt="" loading="lazy">` : artSvg(o.art);
+    /* <picture> с webp и запасным jpg */
+    const pic = (src, alt = '') => `<picture><source srcset="${src.replace(/\.jpg$/, '.webp')}" type="image/webp">
+      <img src="${src}" alt="${alt}" loading="lazy"></picture>`;
+    const media = o => o.photo ? pic(o.photo) : artSvg(o.art);
 
     /* ============================================================
        ОДНОДНЕВНЫЕ ТУРЫ
        ============================================================ */
     const ONE_DAY = [
       {
-        id: 'd1', usd: 299, art: 'canyon', photo: '', kzt: 161000,
+        id: 'd1', usd: 299, art: 'canyon', photo: 'images/loc/bozzhyra.jpg', kzt: 161000,
         title: ['Впадина Карагия, Кызылкуп и Бозжыра', 'Қарақия ойысы, Қызылқұп және Бозжыра',
           'Karagiye Depression, Kyzylkup and Bozzhyra', '卡拉吉耶洼地、克孜勒库普与博兹吉拉'],
         locations: ['karagiya', 'kyzylkup', 'bozzhyra_up', 'bozzhyra_mid'],
         includes: ['inc.lunchVc', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd2', usd: 299, art: 'sherkala', photo: '', kzt: 161000,
+        id: 'd2', usd: 299, art: 'sherkala', photo: 'images/loc/sherkala.jpg', kzt: 161000,
         title: ['Торыш, Акеспе, Кокала, Шеркала, Айракты', 'Торыш, Ақеспе, Көкала, Шерқала, Айрақты',
           'Torysh, Akespe, Kokala, Sherkala, Airakty', '托雷什、阿克斯佩、科卡拉、舍尔卡拉、艾拉克特'],
         locations: ['torysh', 'akespe', 'kokala', 'sherkala', 'airakty'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd3', usd: 299, art: 'salt', photo: '', kzt: 161000,
+        id: 'd3', usd: 299, art: 'salt', photo: 'images/loc/tuzbair.jpg', kzt: 161000,
         title: ['Караман-Ата, Ыбыкты-сай, Тузбаир', 'Қараман-Ата, Ыбықты сай, Тұзбайыр',
           'Karaman-Ata, Ybykty-sai, Tuzbair', '卡拉曼阿塔、伊贝克特峡谷、图兹拜尔'],
         locations: ['karaman_ata', 'ybykty_sai', 'tuzbair'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd4', usd: 299, art: 'mosque', photo: '', kzt: 161000,
+        id: 'd4', usd: 299, art: 'mosque', photo: 'images/loc/shakpak.jpg', kzt: 161000,
         title: ['Жыгылган, Капамсай, Шакпак-Ата, Султан-Епе', 'Жығылған, Қапамсай, Шақпақ-Ата, Сұлтан-Епе',
           'Zhygylgan, Kapamsai, Shakpak-Ata, Sultan-Epe', '日格尔甘、卡帕姆赛、沙克帕克阿塔、苏丹埃佩'],
         locations: ['zhygylgan', 'kapamsai', 'shakpak_ata', 'sultan_epe'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd5', usd: 299, art: 'castles', photo: '', kzt: 161000,
+        id: 'd5', usd: 299, art: 'castles', photo: 'images/loc/kyzylkup.jpg', kzt: 161000,
         title: ['Шопан-Ата, Бекет-Ата, Бозжыра и Кызылкуп', 'Шопан-Ата, Бекет-Ата, Бозжыра және Қызылқұп',
           'Shopan-Ata, Beket-Ata, Bozzhyra and Kyzylkup', '绍潘阿塔、别克特阿塔、博兹吉拉与克孜勒库普'],
         locations: ['shopan_ata', 'beket_ata', 'bozzhyra_up', 'kyzylkup'],
         includes: ['inc.lunchVc', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd6', usd: 239, art: 'lagoon', photo: '', kzt: 129000, choose: true,
+        id: 'd6', usd: 239, art: 'lagoon', photo: 'images/loc/lagoon.jpg', kzt: 129000, choose: true,
         tag: ['Пляжный дзен', 'Жағажай дзені', 'Beach Zen', '海滩禅意'],
         title: ['Пляжный дзен: Голубая Лагуна или Мыс Песчаный', 'Жағажай дзені: Көгілдір шығанағы немесе Песчаный мүйісі',
           'Beach Zen: Blue Lagoon or Sandy Cape', '海滩禅意：蓝色泻湖或桑迪角'],
@@ -3059,27 +3121,27 @@
 
     const MULTI_DAY = [
       {
-        id: 'm2', days: 2, km: 700, art: 'canyon', photo: '', plan: [P.b, P.g],
+        id: 'm2', days: 2, km: 700, art: 'canyon', photo: 'images/loc/bokty.jpg', plan: [P.b, P.g],
         title: ['Перезагрузка 48 часов', '48 сағаттық қайта жүктеу', '48-Hour Reset', '48 小时重启']
       },
       {
-        id: 'm3', days: 3, km: 1000, art: 'salt', photo: '', plan: [P.b, P.c, P.g],
+        id: 'm3', days: 3, km: 1000, art: 'salt', photo: 'images/loc/dinner.jpg', plan: [P.b, P.c, P.g],
         title: ['Вкус горизонтов', 'Көкжиек дәмі', 'A Taste of Horizons', '地平线的味道']
       },
       {
-        id: 'm4', days: 4, km: 1300, art: 'castles', photo: '', plan: [P.b, P.c, P.e, P.f],
+        id: 'm4', days: 4, km: 1300, art: 'castles', photo: 'images/loc/airakty.jpg', plan: [P.b, P.c, P.e, P.f],
         title: ['Гармония четырёх дней', 'Төрт күндік үйлесім', 'Harmony of Four Days', '四日和鸣']
       },
       {
-        id: 'm5', days: 5, km: 1600, art: 'mosque', photo: '', plan: [P.a, P.b, P.c, P.e, P.f],
+        id: 'm5', days: 5, km: 1600, art: 'mosque', photo: 'images/loc/karynzharyk.jpg', plan: [P.a, P.b, P.c, P.e, P.f],
         title: ['Пятидневный дрейф', 'Бес күндік дрейф', 'The Five-Day Drift', '五日漫游']
       },
       {
-        id: 'm6', days: 6, km: 1900, art: 'night', photo: '', plan: [P.a, P.b, P.c, P.d, P.e, P.f],
+        id: 'm6', days: 6, km: 1900, art: 'night', photo: 'images/loc/bozzhyra-night.jpg', plan: [P.a, P.b, P.c, P.d, P.e, P.f],
         title: ['Секретный маршрут', 'Құпия маршрут', 'The Secret Route', '秘密路线']
       },
       {
-        id: 'm7', days: 7, km: 2200, art: 'dunes', photo: '', plan: [P.a, P.b, P.c, P.d, P.e, P.f, P.h],
+        id: 'm7', days: 7, km: 2200, art: 'dunes', photo: 'images/loc/camp.jpg', plan: [P.a, P.b, P.c, P.d, P.e, P.f, P.h],
         title: ['Неделя вне правил', 'Ережеден тыс апта', 'A Week Off the Rules', '不循常规的一周']
       }
     ];
@@ -3088,12 +3150,12 @@
        АРЕНДА
        ============================================================ */
     const RENT = [
-      { icon: 'drone', name: 'DJI Mavic 4 Pro', price: 150, desc: 'r.mavic4', includes: ['ri.drone', 'ri.bat3', 'ri.case'] },
-      { icon: 'drone', name: 'DJI Mavic Air 2', price: 85, desc: 'r.mavicAir', includes: ['ri.drone', 'ri.bat2', 'ri.case'] },
-      { icon: 'atv', name: 'nav.atv', i18nName: true, price: 100, desc: 'r.atv', includes: ['ri.atv', 'ri.helmet'] },
-      { icon: 'sat', name: 'Starlink', price: 32, desc: 'r.starlink', includes: ['ri.terminal', 'ri.power'] },
+      { icon: 'drone', name: 'DJI Mavic 4 Pro', price: 150, desc: 'r.mavic4', photo: 'images/loc/rent-mavic4.jpg', fit: true, includes: ['ri.drone', 'ri.bat3', 'ri.case'] },
+      { icon: 'drone', name: 'DJI Mavic Air 2', price: 85, desc: 'r.mavicAir', photo: 'images/loc/rent-mavicair.jpg', fit: true, includes: ['ri.drone', 'ri.bat2', 'ri.case'] },
+      { icon: 'atv', name: 'nav.atv', i18nName: true, price: 100, desc: 'r.atv', photo: 'images/loc/rent-atv.jpg', includes: ['ri.atv', 'ri.helmet'] },
+      { icon: 'sat', name: 'Starlink', price: 32, desc: 'r.starlink', photo: 'images/loc/rent-starlink.jpg', includes: ['ri.terminal', 'ri.power'] },
       {
-        icon: 'jeep', name: 'nav.car', i18nName: true, price: 215, desc: 'r.car',
+        icon: 'jeep', name: 'nav.car', i18nName: true, price: 215, desc: 'r.car', photo: 'images/loc/rent-jeep.jpg',
         includes: ['ri.jeepAc', 'ri.bedding', 'ri.cookware'],
         excludes: ['rx.fuel', 'rx.insurance', 'rx.meals']
       }
@@ -3117,14 +3179,20 @@
     ];
 
     const GALLERY = [
-      { key: 'bozzhyra_up', art: 'canyon', photo: '' },
-      { key: 'tuzbair', art: 'salt', photo: '' },
-      { key: 'sherkala', art: 'sherkala', photo: '' },
-      { key: 'gal.torysh', ui: true, art: 'balls', photo: '' },
-      { key: 'gal.airakty', ui: true, art: 'castles', photo: '' },
-      { key: 'shakpak_ata', art: 'mosque', photo: '' },
-      { key: 'blue_lagoon', art: 'lagoon', photo: '' },
-      { key: 'gal.caspian', ui: true, art: 'sea', photo: '' }
+      { key: 'bozzhyra_up', art: 'canyon', photo: 'images/loc/bozzhyra.jpg' },
+      { key: 'tuzbair', art: 'salt', photo: 'images/loc/tuzbair.jpg' },
+      { key: 'sherkala', art: 'sherkala', photo: 'images/loc/sherkala.jpg' },
+      { key: 'gal.torysh', ui: true, art: 'balls', photo: 'images/loc/torysh.jpg' },
+      { key: 'gal.airakty', ui: true, art: 'castles', photo: 'images/loc/airakty.jpg' },
+      { key: 'shakpak_ata', art: 'mosque', photo: 'images/loc/shakpak.jpg' },
+      { key: 'bokty', art: 'canyon', photo: 'images/loc/bokty.jpg' },
+      { key: 'karynzharyk', art: 'salt', photo: 'images/loc/karynzharyk.jpg' },
+      { key: 'kyzylkup', art: 'canyon', photo: 'images/loc/kyzylkup.jpg' },
+      { key: 'ybykty_sai', art: 'canyon', photo: 'images/loc/ybykty.jpg' },
+      { key: 'kokala', art: 'castles', photo: 'images/loc/kokala.jpg' },
+      { key: 'kapamsai', art: 'castles', photo: 'images/loc/kapamsai.jpg' },
+      { key: 'zhygylgan', art: 'sea', photo: 'images/loc/zhygylgan.jpg' },
+      { key: 'akespe', art: 'castles', photo: 'images/loc/akespe.jpg' }
     ];
 
     const MARQUEE = ['bozzhyra_up', 'sherkala', 'torysh', 'tuzbair', 'beket_ata', 'karynzharyk', 'airakty', 'blue_lagoon'];
@@ -3292,7 +3360,10 @@
         const name = r.i18nName ? t(r.name) : r.name;
         return `
         <div class="rent reveal">
-          <div class="r-icon"><svg viewBox="0 0 24 24">${RENT_ICONS[r.icon]}</svg></div>
+          <div class="r-photo${r.photo ? (r.fit ? ' fit' : '') : ' empty'}">
+            ${r.photo ? pic(r.photo, name)
+            : `<svg class="r-photo-art" viewBox="0 0 24 24">${RENT_ICONS[r.icon]}</svg>`}
+          </div>
           <h3>${name}</h3>
           <p style="font-size:.88rem;color:rgba(14,42,48,.7)">${t(r.desc)}</p>
           <p class="r-price">${r.price} $ <small>/ ${t('rn.perDay')}</small></p>
@@ -3311,7 +3382,7 @@
     function renderGallery() {
       document.getElementById('placesGrid').innerHTML = GALLERY.map(g => `
         <div class="g-tile">
-          ${g.photo ? `<img src="${g.photo}" alt="" loading="lazy">` : artSvg(g.art)}
+          ${g.photo ? pic(g.photo, g.ui ? t(g.key) : loc(g.key)) : artSvg(g.art)}
           <span>${g.ui ? t(g.key) : loc(g.key)}</span>
         </div>`).join('');
       updateGalleryNav();

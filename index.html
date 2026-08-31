@@ -7,10 +7,12 @@
   <title>Visit Aktau — Джип-туры по Мангистау: однодневные и многодневные</title>
   <meta name="description"
     content="Visit Aktau — местный лицензированный туроператор в Мангистауской области. Однодневные и многодневные джип-туры к Бозжыре, Тузбаиру, Шеркале и подземным мечетям. Аренда дрона, квадроцикла, Starlink и джипа.">
+  <link rel="preload" as="image" href="images/hero-bokty.jpg"
+    imagesrcset="images/hero-bokty-sm.jpg 1200w, images/hero-bokty.jpg 2200w" imagesizes="100vw">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;600;700;800&family=Onest:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -37,7 +39,7 @@
     }
 
     body {
-      font-family: 'Manrope', system-ui, sans-serif;
+      font-family: 'Onest', system-ui, sans-serif;
       color: var(--ink);
       background: var(--paper);
       line-height: 1.6;
@@ -86,7 +88,7 @@
     h1,
     h2,
     h3 {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       line-height: 1.14;
       font-weight: 600
     }
@@ -239,7 +241,7 @@
     }
 
     .logo {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-weight: 800;
       font-size: 1.05rem;
       color: var(--ink);
@@ -357,20 +359,41 @@
     }
 
     /* ---------- Hero ---------- */
-    /* Первый экран — светлый.
-       Чтобы поставить фото фоном: положите файл в images/ и раскомментируйте
-       --hero-photo ниже, например url('images/hero.jpg'). */
+    /* Первый экран — фото горы Боқты фоном.
+       Файл: images/hero-bokty.jpg (+ webp и мобильная версия -sm). */
     .hero {
       position: relative;
       min-height: 88svh;
       display: flex;
       align-items: center;
-      /* --hero-photo: url('images/hero.jpg'); */
+      --hero-photo: url('images/hero-bokty.jpg');
       background:
         var(--hero-photo, none) center/cover no-repeat,
         linear-gradient(180deg, #FBF8F1 0%, #F6EAD6 42%, #F0DCC0 72%, #E8CEA9 100%);
       overflow: hidden;
       color: var(--ink);
+    }
+
+    @media (max-width:900px) {
+      .hero {
+        --hero-photo: url('images/hero-bokty-sm.jpg');
+        background-position: 62% center;
+      }
+    }
+
+    /* WebP там, где браузер его поддерживает */
+    @supports (background-image: image-set(url('images/hero-bokty.webp') type('image/webp'))) {
+      .hero {
+        --hero-photo: image-set(url('images/hero-bokty.webp') type('image/webp'),
+            url('images/hero-bokty.jpg') type('image/jpeg'));
+      }
+
+      @media (max-width:900px) {
+        .hero {
+          --hero-photo: image-set(url('images/hero-bokty-sm.webp') type('image/webp'),
+              url('images/hero-bokty-sm.jpg') type('image/jpeg'));
+        }
+      }
     }
 
     /* Светлая вуаль поверх фото, чтобы текст всегда читался */
@@ -380,7 +403,16 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      background: linear-gradient(120deg, rgba(251, 248, 241, .72) 0%, rgba(251, 248, 241, .42) 55%, rgba(251, 248, 241, .12) 100%);
+      background:
+        linear-gradient(105deg, rgba(251, 248, 241, .93) 0%, rgba(251, 248, 241, .82) 34%, rgba(251, 248, 241, .42) 62%, rgba(251, 248, 241, .18) 100%),
+        linear-gradient(180deg, rgba(251, 248, 241, .55) 0%, rgba(251, 248, 241, 0) 30%, rgba(232, 206, 169, .35) 100%);
+    }
+
+    @media (max-width:760px) {
+      .hero::before {
+        background:
+          linear-gradient(180deg, rgba(251, 248, 241, .92) 0%, rgba(251, 248, 241, .80) 48%, rgba(251, 248, 241, .55) 100%);
+      }
     }
 
     .hero-art {
@@ -445,7 +477,7 @@
 
     .hero-badges b {
       display: block;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: 1.2rem;
       color: var(--sea-deep);
       font-weight: 600
@@ -474,7 +506,7 @@
       display: inline-flex;
       gap: 48px;
       animation: slide 32s linear infinite;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .8rem;
       letter-spacing: .08em
     }
@@ -584,14 +616,14 @@
     }
 
     .tcard .price {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-weight: 600;
       font-size: 1.05rem;
       color: var(--sea-deep)
     }
 
     .tcard .price small {
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .7rem;
       font-weight: 700;
       color: rgba(14, 42, 48, .55);
@@ -719,7 +751,7 @@
       left: 14px;
       bottom: 12px;
       z-index: 2;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .74rem;
       font-weight: 600;
       color: #fff;
@@ -1124,7 +1156,7 @@
 
     .price-sub {
       display: block;
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .74rem;
       font-weight: 600;
       color: rgba(14, 42, 48, .5);
@@ -1158,14 +1190,14 @@
     table.pt thead th {
       background: var(--sea-deep);
       color: #fff;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-weight: 600;
       font-size: .8rem;
       white-space: nowrap
     }
 
     table.pt tbody th {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .85rem;
       font-weight: 600;
       background: var(--chalk);
@@ -1205,7 +1237,7 @@
 
     .stat b {
       display: block;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: clamp(1.6rem, 4vw, 2.4rem);
       color: var(--sea-deep);
       line-height: 1
@@ -1286,14 +1318,14 @@
     }
 
     .rent .r-price {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: 1.4rem;
       color: var(--sea-deep);
       margin: 6px 0 14px
     }
 
     .rent .r-price small {
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .8rem;
       font-weight: 600;
       color: rgba(14, 42, 48, .55)
@@ -1644,7 +1676,7 @@
     }
 
     .modal-price {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: clamp(1.8rem, 5vw, 2.6rem);
       color: var(--sea-deep);
       line-height: 1.1;
@@ -1652,7 +1684,7 @@
     }
 
     .modal-price small {
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .82rem;
       font-weight: 600;
       color: rgba(14, 42, 48, .55)
@@ -1674,7 +1706,7 @@
     }
 
     .m-sub {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .95rem;
       margin: 26px 0 14px
     }
@@ -1751,14 +1783,14 @@
 
     .pkg-tab .pt-name {
       display: block;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .84rem;
       margin-bottom: 4px
     }
 
     .pkg-tab .pt-price {
       display: block;
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: 1.2rem;
       color: var(--sea-deep)
     }
@@ -1788,13 +1820,13 @@
     }
 
     .pkg-pane .pp {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: 1.45rem;
       color: var(--sea-deep)
     }
 
     .pkg-pane .pp small {
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .72rem;
       font-weight: 600;
       color: rgba(14, 42, 48, .5);
@@ -1814,20 +1846,20 @@
     }
 
     .pkg h4 {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: .88rem;
       margin-bottom: 4px
     }
 
     .pkg .pp {
-      font-family: 'Unbounded', sans-serif;
+      font-family: 'Geologica', sans-serif;
       font-size: 1.45rem;
       color: var(--sea-deep);
       margin-bottom: 10px
     }
 
     .pkg .pp small {
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Onest', sans-serif;
       font-size: .72rem;
       font-weight: 600;
       color: rgba(14, 42, 48, .5);
@@ -2001,14 +2033,14 @@
 
     /* zh needs a font stack that actually has the glyphs */
     html[lang="zh"] body {
-      font-family: 'Manrope', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif
+      font-family: 'Onest', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif
     }
 
     html[lang="zh"] h1,
     html[lang="zh"] h2,
     html[lang="zh"] h3,
     html[lang="zh"] h4 {
-      font-family: 'Unbounded', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif
+      font-family: 'Geologica', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif
     }
 
     html[lang="zh"] .eyebrow,
@@ -2081,25 +2113,7 @@
 
   <!-- ============ HERO ============ -->
   <header class="hero" id="top">
-    <svg class="hero-art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <circle cx="1050" cy="430" r="120" fill="#F2A35E" opacity=".55" />
-      <circle cx="1050" cy="430" r="190" fill="#F2A35E" opacity=".12" />
-      <path
-        d="M0 560 L180 545 L260 500 L300 500 L340 545 L640 555 L760 510 L830 510 L900 555 L1440 560 L1440 900 L0 900 Z"
-        fill="#EBDCC0" opacity=".9" />
-      <path
-        d="M0 660 L120 640 L200 560 L240 555 L290 640 L520 655 L600 580 L660 575 L720 650 L1000 660 L1100 600 L1170 595 L1250 655 L1440 662 L1440 900 L0 900 Z"
-        fill="#DFC9A4" />
-      <rect x="0" y="700" width="1440" height="200" fill="#D6BC92" />
-      <path d="M0 700 Q360 690 720 700 T1440 700 L1440 900 L0 900 Z" fill="#CBAE80" />
-      <g opacity=".45" fill="#FBF8F1">
-        <rect x="990" y="712" width="120" height="4" rx="2" opacity=".8" />
-        <rect x="1010" y="728" width="80" height="4" rx="2" opacity=".6" />
-        <rect x="975" y="746" width="150" height="4" rx="2" opacity=".45" />
-        <rect x="1020" y="766" width="60" height="4" rx="2" opacity=".35" />
-        <rect x="990" y="788" width="120" height="4" rx="2" opacity=".25" />
-      </g>
-    </svg>
+    <!-- фон первого экрана — фото горы Боқты (images/hero-bokty.jpg) -->
 
     <div class="wrap hero-content">
       <p class="eyebrow" data-i18n="hero.eyebrow"></p>
@@ -2262,11 +2276,15 @@
       </div>
       <div class="g-carousel reveal">
         <button class="g-nav prev" type="button" id="placesPrev" aria-label="←">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
         </button>
         <div class="g-grid" id="placesGrid"></div>
         <button class="g-nav next" type="button" id="placesNext" aria-label="→">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
     </div>

@@ -551,7 +551,7 @@
     }
 
     .tcard-art {
-      height: 160px;
+      aspect-ratio: 3 / 2;
       position: relative;
       overflow: hidden
     }
@@ -570,7 +570,7 @@
       position: absolute;
       top: 12px;
       left: 12px;
-      background: rgba(10, 59, 67, .85);
+      background: rgba(224, 130, 78, .92);
       color: #fff;
       font-size: .64rem;
       font-weight: 800;
@@ -596,8 +596,8 @@
 
     .tcard-meta {
       font-size: .8rem;
-      color: rgba(14, 42, 48, .6);
-      font-weight: 600;
+      color: var(--apricot);
+      font-weight: 700;
       margin-bottom: 16px
     }
 
@@ -641,20 +641,20 @@
 
     /* ---------- Attractions gallery ---------- */
     .gallery {
-      background: var(--sea-deep);
-      color: #fff
+      background: linear-gradient(180deg, #FDF0DE 0%, #F7DCBC 100%);
+      color: var(--ink)
     }
 
     .gallery .section-head p {
-      color: rgba(255, 255, 255, .75)
+      color: rgba(14, 42, 48, .72)
     }
 
     .gallery .eyebrow {
-      color: var(--gold)
+      color: var(--ochre)
     }
 
     .gallery .eyebrow::before {
-      background: var(--gold)
+      background: var(--ochre)
     }
 
     /* Достопримечательности — карусель в один ряд */
@@ -699,6 +699,12 @@
       align-items: center;
       justify-content: center;
       transition: opacity .25s, transform .2s
+    }
+
+    .gallery .g-nav {
+      background: var(--apricot);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(156, 91, 51, .32)
     }
 
     .g-nav:hover {
@@ -1713,16 +1719,68 @@
     }
 
     .modal-hero {
-      height: 200px;
+      aspect-ratio: 16 / 9;
+      max-height: 340px;
       position: relative;
       overflow: hidden
     }
 
+    /* Фотополоса: по одному снимку на каждую локацию маршрута */
+    .modal-hero.strip {
+      aspect-ratio: auto;
+      max-height: none;
+      overflow: visible
+    }
+
+    .hero-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none
+    }
+
+    .hero-strip::-webkit-scrollbar {
+      display: none
+    }
+
+    .hero-strip figure {
+      position: relative;
+      flex: 0 0 clamp(180px, 40%, 280px);
+      aspect-ratio: 4 / 3;
+      margin: 0;
+      overflow: hidden;
+      scroll-snap-align: start
+    }
+
+    .hero-strip figure::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 52%, rgba(10, 30, 35, .72))
+    }
+
+    .hero-strip figcaption {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      z-index: 2;
+      color: #fff;
+      font-family: 'Geologica', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .6)
+    }
+
     .modal-hero svg,
-    .modal-hero img {
+    .modal-hero img,
+    .hero-strip img {
       width: 100%;
       height: 100%;
-      object-fit: cover
+      object-fit: cover;
+      display: block
     }
 
     .modal-body {
@@ -3032,35 +3090,35 @@
        ============================================================ */
     const ONE_DAY = [
       {
-        id: 'd1', usd: 299, art: 'canyon', photo: 'images/loc/bozzhyra.jpg', kzt: 161000,
+        id: 'd1', usd: 299, art: 'canyon', photo: 'images/loc/bozzhyra/01.jpg', kzt: 161000,
         title: ['Впадина Карагия, Кызылкуп и Бозжыра', 'Қарақия ойысы, Қызылқұп және Бозжыра',
           'Karagiye Depression, Kyzylkup and Bozzhyra', '卡拉吉耶洼地、克孜勒库普与博兹吉拉'],
         locations: ['karagiya', 'kyzylkup', 'bozzhyra_up', 'bozzhyra_mid'],
         includes: ['inc.lunchVc', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd2', usd: 299, art: 'sherkala', photo: 'images/loc/sherkala.jpg', kzt: 161000,
+        id: 'd2', usd: 299, art: 'sherkala', photo: 'images/loc/sherkala/01.jpg', kzt: 161000,
         title: ['Торыш, Акеспе, Кокала, Шеркала, Айракты', 'Торыш, Ақеспе, Көкала, Шерқала, Айрақты',
           'Torysh, Akespe, Kokala, Sherkala, Airakty', '托雷什、阿克斯佩、科卡拉、舍尔卡拉、艾拉克特'],
         locations: ['torysh', 'akespe', 'kokala', 'sherkala', 'airakty'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd3', usd: 299, art: 'salt', photo: 'images/loc/tuzbair.jpg', kzt: 161000,
+        id: 'd3', usd: 299, art: 'salt', photo: 'images/loc/tuzbair/01.jpg', kzt: 161000,
         title: ['Караман-Ата, Ыбыкты-сай, Тузбаир', 'Қараман-Ата, Ыбықты сай, Тұзбайыр',
           'Karaman-Ata, Ybykty-sai, Tuzbair', '卡拉曼阿塔、伊贝克特峡谷、图兹拜尔'],
         locations: ['karaman_ata', 'ybykty_sai', 'tuzbair'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd4', usd: 299, art: 'mosque', photo: 'images/loc/shakpak.jpg', kzt: 161000,
+        id: 'd4', usd: 299, art: 'mosque', photo: 'images/loc/shakpak/02.jpg', kzt: 161000,
         title: ['Жыгылган, Капамсай, Шакпак-Ата, Султан-Епе', 'Жығылған, Қапамсай, Шақпақ-Ата, Сұлтан-Епе',
           'Zhygylgan, Kapamsai, Shakpak-Ata, Sultan-Epe', '日格尔甘、卡帕姆赛、沙克帕克阿塔、苏丹埃佩'],
         locations: ['zhygylgan', 'kapamsai', 'shakpak_ata', 'sultan_epe'],
         includes: ['inc.lunch', 'inc.jeep', 'inc.guideDriver']
       },
       {
-        id: 'd5', usd: 299, art: 'castles', photo: 'images/loc/kyzylkup.jpg', kzt: 161000,
+        id: 'd5', usd: 299, art: 'castles', photo: 'images/loc/kyzylkup/01.jpg', kzt: 161000,
         title: ['Шопан-Ата, Бекет-Ата, Бозжыра и Кызылкуп', 'Шопан-Ата, Бекет-Ата, Бозжыра және Қызылқұп',
           'Shopan-Ata, Beket-Ata, Bozzhyra and Kyzylkup', '绍潘阿塔、别克特阿塔、博兹吉拉与克孜勒库普'],
         locations: ['shopan_ata', 'beket_ata', 'bozzhyra_up', 'kyzylkup'],
@@ -3121,7 +3179,7 @@
 
     const MULTI_DAY = [
       {
-        id: 'm2', days: 2, km: 700, art: 'canyon', photo: 'images/loc/bokty.jpg', plan: [P.b, P.g],
+        id: 'm2', days: 2, km: 700, art: 'canyon', photo: 'images/loc/bokty/01.jpg', plan: [P.b, P.g],
         title: ['Перезагрузка 48 часов', '48 сағаттық қайта жүктеу', '48-Hour Reset', '48 小时重启']
       },
       {
@@ -3129,11 +3187,11 @@
         title: ['Вкус горизонтов', 'Көкжиек дәмі', 'A Taste of Horizons', '地平线的味道']
       },
       {
-        id: 'm4', days: 4, km: 1300, art: 'castles', photo: 'images/loc/airakty.jpg', plan: [P.b, P.c, P.e, P.f],
+        id: 'm4', days: 4, km: 1300, art: 'castles', photo: 'images/loc/airakty/01.jpg', plan: [P.b, P.c, P.e, P.f],
         title: ['Гармония четырёх дней', 'Төрт күндік үйлесім', 'Harmony of Four Days', '四日和鸣']
       },
       {
-        id: 'm5', days: 5, km: 1600, art: 'mosque', photo: 'images/loc/karynzharyk.jpg', plan: [P.a, P.b, P.c, P.e, P.f],
+        id: 'm5', days: 5, km: 1600, art: 'mosque', photo: 'images/loc/shakpak/01.jpg', plan: [P.a, P.b, P.c, P.e, P.f],
         title: ['Пятидневный дрейф', 'Бес күндік дрейф', 'The Five-Day Drift', '五日漫游']
       },
       {
@@ -3178,21 +3236,56 @@
       { group: 'grp.caspian', items: ['blue_lagoon', 'sandy_cape'] }
     ];
 
+    /* Фотонаборы локаций (готовит build-photos.py из папки заказчика).
+       Порядок = приоритет: первый кадр идёт на обложку и в карусель. */
+    const LOC_PHOTOS = {
+      airakty: ['images/loc/airakty/01.jpg', 'images/loc/airakty/02.jpg', 'images/loc/airakty/03.jpg', 'images/loc/airakty/04.jpg'],
+      akespe: ['images/loc/akespe/01.jpg'],
+      bokty: ['images/loc/bokty/01.jpg', 'images/loc/bokty/02.jpg', 'images/loc/bokty/03.jpg', 'images/loc/bokty/04.jpg'],
+      kapamsai: ['images/loc/kapamsai/01.jpg', 'images/loc/kapamsai/02.jpg', 'images/loc/kapamsai/03.jpg', 'images/loc/kapamsai/04.jpg'],
+      karynzharyk: ['images/loc/karynzharyk/01.jpg', 'images/loc/karynzharyk/02.jpg', 'images/loc/karynzharyk/03.jpg', 'images/loc/karynzharyk/04.jpg'],
+      kokala: ['images/loc/kokala/01.jpg', 'images/loc/kokala/02.jpg', 'images/loc/kokala/03.jpg', 'images/loc/kokala/04.jpg'],
+      kyzylkup: ['images/loc/kyzylkup/01.jpg', 'images/loc/kyzylkup/02.jpg', 'images/loc/kyzylkup/03.jpg', 'images/loc/kyzylkup/04.jpg'],
+      shakpak_ata: ['images/loc/shakpak/01.jpg', 'images/loc/shakpak/02.jpg', 'images/loc/shakpak/03.jpg', 'images/loc/shakpak/04.jpg'],
+      sherkala: ['images/loc/sherkala/01.jpg', 'images/loc/sherkala/02.jpg', 'images/loc/sherkala/03.jpg', 'images/loc/sherkala/04.jpg'],
+      torysh: ['images/loc/torysh/01.jpg', 'images/loc/torysh/02.jpg', 'images/loc/torysh/03.jpg', 'images/loc/torysh/04.jpg'],
+      tuzbair: ['images/loc/tuzbair/01.jpg', 'images/loc/tuzbair/02.jpg', 'images/loc/tuzbair/03.jpg', 'images/loc/tuzbair/04.jpg'],
+      ybykty_sai: ['images/loc/ybykty/01.jpg', 'images/loc/ybykty/02.jpg', 'images/loc/ybykty/03.jpg', 'images/loc/ybykty/04.jpg'],
+      zhygylgan: ['images/loc/zhygylgan/01.jpg', 'images/loc/zhygylgan/02.jpg', 'images/loc/zhygylgan/03.jpg', 'images/loc/zhygylgan/04.jpg'],
+      bozzhyra_up: ['images/loc/bozzhyra/01.jpg', 'images/loc/bozzhyra/02.jpg', 'images/loc/bozzhyra/03.jpg', 'images/loc/bozzhyra/04.jpg'],
+      bozzhyra_mid: ['images/loc/bozzhyra/01.jpg', 'images/loc/bozzhyra/02.jpg', 'images/loc/bozzhyra/03.jpg', 'images/loc/bozzhyra/04.jpg'],
+      bozzhyra_low: ['images/loc/bozzhyra/01.jpg', 'images/loc/bozzhyra/02.jpg', 'images/loc/bozzhyra/03.jpg', 'images/loc/bozzhyra/04.jpg'],
+      bozzhyra_2: ['images/loc/bozzhyra/01.jpg', 'images/loc/bozzhyra/02.jpg', 'images/loc/bozzhyra/03.jpg', 'images/loc/bozzhyra/04.jpg'],
+      ybykty_tuzbair: ['images/loc/ybykty/01.jpg', 'images/loc/ybykty/02.jpg', 'images/loc/ybykty/03.jpg', 'images/loc/ybykty/04.jpg'],
+      blue_lagoon: ['images/loc/lagoon.jpg']
+    };
+
+    /* Фото берётся из LOC_PHOTOS по ключу; art — запасная SVG-иллюстрация,
+       она рисуется, пока для локации нет реального снимка. */
     const GALLERY = [
-      { key: 'bozzhyra_up', art: 'canyon', photo: 'images/loc/bozzhyra.jpg' },
-      { key: 'tuzbair', art: 'salt', photo: 'images/loc/tuzbair.jpg' },
-      { key: 'sherkala', art: 'sherkala', photo: 'images/loc/sherkala.jpg' },
-      { key: 'gal.torysh', ui: true, art: 'balls', photo: 'images/loc/torysh.jpg' },
-      { key: 'gal.airakty', ui: true, art: 'castles', photo: 'images/loc/airakty.jpg' },
-      { key: 'shakpak_ata', art: 'mosque', photo: 'images/loc/shakpak.jpg' },
-      { key: 'bokty', art: 'canyon', photo: 'images/loc/bokty.jpg' },
-      { key: 'karynzharyk', art: 'salt', photo: 'images/loc/karynzharyk.jpg' },
-      { key: 'kyzylkup', art: 'canyon', photo: 'images/loc/kyzylkup.jpg' },
-      { key: 'ybykty_sai', art: 'canyon', photo: 'images/loc/ybykty.jpg' },
-      { key: 'kokala', art: 'castles', photo: 'images/loc/kokala.jpg' },
-      { key: 'kapamsai', art: 'castles', photo: 'images/loc/kapamsai.jpg' },
-      { key: 'zhygylgan', art: 'sea', photo: 'images/loc/zhygylgan.jpg' },
-      { key: 'akespe', art: 'castles', photo: 'images/loc/akespe.jpg' }
+      { key: 'bozzhyra_up', art: 'canyon' },
+      { key: 'tuzbair', art: 'salt' },
+      { key: 'sherkala', art: 'sherkala' },
+      { key: 'gal.torysh', ui: true, photoKey: 'torysh', art: 'balls' },
+      { key: 'gal.airakty', ui: true, photoKey: 'airakty', art: 'castles' },
+      { key: 'shakpak_ata', art: 'mosque' },
+      { key: 'bokty', art: 'canyon' },
+      { key: 'karynzharyk', art: 'salt' },
+      { key: 'kyzylkup', art: 'canyon' },
+      { key: 'ybykty_sai', art: 'canyon' },
+      { key: 'kokala', art: 'castles' },
+      { key: 'kapamsai', art: 'castles' },
+      { key: 'zhygylgan', art: 'sea' },
+      { key: 'akespe', art: 'castles' },
+      { key: 'blue_lagoon', art: 'lagoon' },
+      { key: 'karagiya', art: 'canyon' },
+      { key: 'karaman_ata', art: 'mosque' },
+      { key: 'sultan_epe', art: 'mosque' },
+      { key: 'shopan_ata', art: 'mosque' },
+      { key: 'beket_ata', art: 'mosque' },
+      { key: 'sandy_cape', art: 'sea' },
+      { key: 'onere', art: 'castles' },
+      { key: 'senek_sands', art: 'dunes' }
     ];
 
     const MARQUEE = ['bozzhyra_up', 'sherkala', 'torysh', 'tuzbair', 'beket_ata', 'karynzharyk', 'airakty', 'blue_lagoon'];
@@ -3301,7 +3394,7 @@
             <p class="tcard-meta">${dayWord(x.days)}</p>
             <div class="tcard-foot">
               <p class="price">${fromPrice(PRICES[x.days].eco + ' $')}<span class="price-sub">${t('c.perPerson')}</span></p>
-              <button class="btn dark" type="button" data-multi-open="${x.id}">${t('c.details')}</button>
+              <button class="btn" type="button" data-multi-open="${x.id}">${t('c.details')}</button>
             </div>
           </div>
         </article>`).join('');
@@ -3380,11 +3473,15 @@
        ГАЛЕРЕЯ
        ============================================================ */
     function renderGallery() {
-      document.getElementById('placesGrid').innerHTML = GALLERY.map(g => `
+      document.getElementById('placesGrid').innerHTML = GALLERY.map(g => {
+        const name = g.ui ? t(g.key) : loc(g.key);
+        const shot = (LOC_PHOTOS[g.photoKey || g.key] || [])[0];
+        return `
         <div class="g-tile">
-          ${g.photo ? pic(g.photo, g.ui ? t(g.key) : loc(g.key)) : artSvg(g.art)}
-          <span>${g.ui ? t(g.key) : loc(g.key)}</span>
-        </div>`).join('');
+          ${shot ? pic(shot, name) : artSvg(g.art)}
+          <span>${name}</span>
+        </div>`;
+      }).join('');
       updateGalleryNav();
     }
 
@@ -3497,7 +3594,36 @@
     modal.addEventListener('click', e => { if (e.target.hasAttribute('data-close')) closeModal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && openTour) closeModal(); });
 
+    /* По одному снимку на локацию. Если несколько локаций делят одну папку
+       (например три смотровые Бозжыры) — берём следующий кадр набора,
+       чтобы одно и то же фото не повторялось подряд. */
+    function tourShots(keys) {
+      const used = {}, out = [];
+      keys.forEach(k => {
+        const set = LOC_PHOTOS[k];
+        if (!set || !set.length) return;
+        const n = used[set[0]] || 0;
+        used[set[0]] = n + 1;
+        out.push({ key: k, src: set[n % set.length] });
+      });
+      return out;
+    }
+
+    /* Шапка модалки: фотополоса маршрута, а если снимков нет — обычная обложка */
+    function heroFor(x, keys) {
+      const shots = tourShots(keys);
+      if (shots.length < 2) return { html: media(x), strip: false };
+      return {
+        strip: true,
+        html: `<div class="hero-strip">${shots.map(s =>
+          `<figure>${pic(s.src, loc(s.key))}<figcaption>${loc(s.key)}</figcaption></figure>`).join('')}</div>`
+      };
+    }
+
     function show(hero, html) {
+      const h = typeof hero === 'string' ? { html: hero, strip: false } : hero;
+      modalHero.classList.toggle('strip', h.strip);
+      hero = h.html;
       modalHero.innerHTML = hero;
       modalBody.innerHTML = html;
       modal.classList.add('open');
@@ -3509,7 +3635,7 @@
       if (!x) return;
       openTour = { kind: 'multi', id };
       const pr = PRICES[x.days], title = tr(x.title);
-      show(media(x), `
+      show(heroFor(x, x.plan.flat()), `
         <p class="eyebrow">${t('c.multiTour')} · ${dayWord(x.days)}</p>
         <h2 id="modalTitle">${title}</h2>
         <p class="modal-price">${fromPrice(pr.eco + ' $')} <small>${t('c.priceEco')}</small></p>
@@ -3578,7 +3704,7 @@
       if (!x) return;
       openTour = { kind: 'one', id };
       const title = tr(x.title);
-      show(media(x), `
+      show(heroFor(x, x.locations), `
         <p class="eyebrow">${t('c.oneTour')}</p>
         <h2 id="modalTitle">${title}</h2>
         <p class="modal-price">${tourUsd(x)} <small>${kztFmt(x.kzt)} ${t('c.perJeepFull')}</small></p>

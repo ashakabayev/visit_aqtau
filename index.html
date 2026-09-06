@@ -1733,25 +1733,16 @@
     }
 
     .hero-strip {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 6px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      scrollbar-width: none
-    }
-
-    .hero-strip::-webkit-scrollbar {
-      display: none
     }
 
     .hero-strip figure {
       position: relative;
-      flex: 0 0 clamp(180px, 40%, 280px);
       aspect-ratio: 4 / 3;
       margin: 0;
-      overflow: hidden;
-      scroll-snap-align: start
+      overflow: hidden
     }
 
     .hero-strip figure::after {
@@ -3243,7 +3234,7 @@
       akespe: ['images/loc/akespe/01.jpg'],
       bokty: ['images/loc/bokty/01.jpg', 'images/loc/bokty/02.jpg', 'images/loc/bokty/03.jpg', 'images/loc/bokty/04.jpg'],
       kapamsai: ['images/loc/kapamsai/01.jpg', 'images/loc/kapamsai/02.jpg', 'images/loc/kapamsai/03.jpg', 'images/loc/kapamsai/04.jpg'],
-      karynzharyk: ['images/loc/karynzharyk/01.jpg', 'images/loc/karynzharyk/02.jpg', 'images/loc/karynzharyk/03.jpg', 'images/loc/karynzharyk/04.jpg'],
+      karynzharyk: ['images/loc/karynzharyk/02.jpg', 'images/loc/karynzharyk/01.jpg', 'images/loc/karynzharyk/04.jpg'],
       kokala: ['images/loc/kokala/01.jpg', 'images/loc/kokala/02.jpg', 'images/loc/kokala/03.jpg', 'images/loc/kokala/04.jpg'],
       kyzylkup: ['images/loc/kyzylkup/01.jpg', 'images/loc/kyzylkup/02.jpg', 'images/loc/kyzylkup/03.jpg', 'images/loc/kyzylkup/04.jpg'],
       shakpak_ata: ['images/loc/shakpak/01.jpg', 'images/loc/shakpak/02.jpg', 'images/loc/shakpak/03.jpg', 'images/loc/shakpak/04.jpg'],

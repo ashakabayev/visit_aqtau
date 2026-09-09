@@ -50,7 +50,12 @@ for rel in sorted(set(re.findall(r"url\('(images/[A-Za-z0-9._/-]+\.(?:jpg|jpeg|p
 js_paths = sorted(set(re.findall(r"'(images/[A-Za-z0-9._/-]+\.(?:jpg|jpeg|png|webp))'", html)))
 missing = [r for r in js_paths if not (root / r).exists()]
 assert not missing, missing
-keys = {rel: re.sub(r'\W', '_', pathlib.Path(rel).stem) for rel in js_paths}
+# The key becomes a JS identifier (IMG.<key>), so it must not start with a digit
+# and must stay unique: per-location folders all hold 01.jpg..04.jpg, so the file
+# stem alone would collide and emit invalid `IMG.01`.
+keys = {rel: 'img_' + re.sub(r'\W', '_', rel[len('images/'):].rsplit('.', 1)[0])
+        for rel in js_paths}
+assert len(set(keys.values())) == len(keys), 'duplicate IMG keys'
 
 table = "const IMG = {\n" + "".join(
     "      %s: '%s',\n" % (keys[rel], uri(rel)) for rel in js_paths) + "    };\n    "

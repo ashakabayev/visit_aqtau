@@ -193,7 +193,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 38px;
+      min-height: 38px;
+      padding-top: 6px;
+      padding-bottom: 6px;
       gap: 16px
     }
 
@@ -1022,7 +1024,8 @@
         background: var(--paper)
       }
 
-      .nav>.wrap .langsel {
+      .nav>.wrap .langsel,
+      .nav>.wrap .logo {
         position: relative;
         z-index: 51
       }
@@ -1082,6 +1085,71 @@
       }
     }
 
+    /* page must not scroll behind the fixed mobile menu panel */
+    body.nav-open {
+      overflow: hidden
+    }
+
+    @media (max-width:640px) {
+      .topbar {
+        font-size: .72rem
+      }
+
+      .topbar .wrap {
+        gap: 10px
+      }
+
+      .topbar .contacts {
+        gap: 10px;
+        flex-wrap: nowrap;
+        white-space: nowrap
+      }
+
+      .topbar .contacts .hide-m-x {
+        display: none
+      }
+
+      /* 16px keeps iOS Safari from zooming the page when a field gets focus */
+      .field input,
+      .field select,
+      .field textarea {
+        font-size: 16px
+      }
+
+      /* price tables scroll sideways: keep the package column pinned and
+         show a shadow on the edge that still has content behind it */
+      .table-wrap {
+        background:
+          linear-gradient(to right, #fff, rgba(255, 255, 255, 0)) 0 0/24px 100% no-repeat local,
+          linear-gradient(to left, #fff, rgba(255, 255, 255, 0)) 100% 0/24px 100% no-repeat local,
+          radial-gradient(farthest-side at 0 50%, rgba(14, 42, 48, .18), transparent) 0 0/12px 100% no-repeat scroll,
+          radial-gradient(farthest-side at 100% 50%, rgba(14, 42, 48, .18), transparent) 100% 0/12px 100% no-repeat scroll,
+          #fff
+      }
+
+      table.pt {
+        min-width: 560px;
+        font-size: .86rem
+      }
+
+      table.pt th,
+      table.pt td {
+        padding: 11px 12px
+      }
+
+      table.pt thead th:first-child,
+      table.pt tbody th {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        box-shadow: 1px 0 0 var(--line)
+      }
+
+      table.pt thead th:first-child {
+        background: var(--sea-deep)
+      }
+    }
+
     @media (max-width:640px) {
       .section {
         padding: 62px 0
@@ -1109,7 +1177,12 @@
       }
 
       .foot-grid {
-        grid-template-columns: 1fr 1fr
+        grid-template-columns: 1fr 1fr;
+        gap: 32px
+      }
+
+      .foot-grid>div:first-child {
+        grid-column: 1 / -1
       }
 
       .topbar .lang {
@@ -3787,6 +3860,7 @@
     toggle.addEventListener('click', () => {
       const open = links.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open);
+      document.body.classList.toggle('nav-open', open);
     });
 
     links.querySelectorAll('.nav-item > a').forEach(a => {
@@ -3798,7 +3872,11 @@
       });
     });
     links.querySelectorAll('.dropdown a, .cta-btn a, .nav-item:not(:has(.dropdown)) > a').forEach(a =>
-      a.addEventListener('click', () => links.classList.remove('open'))
+      a.addEventListener('click', () => {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-open');
+      })
     );
   </script>
 </body>

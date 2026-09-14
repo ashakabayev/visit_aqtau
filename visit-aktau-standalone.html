@@ -2232,7 +2232,7 @@
             <p class="dd-label" data-i18n="nav.mangystau"></p>
             <a href="#multiday" data-i18n="nav.multiday"></a>
             <a href="#oneday" data-i18n="nav.oneday"></a>
-            <a href="#prices" data-i18n="nav.prices"></a>
+            <!-- <a href="#prices" data-i18n="nav.prices"></a> -->
           </div>
         </li>
         <li class="nav-item">
@@ -2302,13 +2302,13 @@
           <h2 data-i18n="md.title"></h2>
           <p data-i18n="md.lead"></p>
         </div>
-        <a class="more-link" href="#prices" data-i18n="md.more"></a>
+        <!-- <a class="more-link" href="#prices" data-i18n="md.more"></a> -->
       </div>
       <div class="cards-3" id="multidayGrid"></div>
     </div>
   </section>
 
-  <!-- ============ PRICE TABLE ============ -->
+  <!-- ============ PRICE TABLE (отключено — не используется) ============
   <section class="section alt" id="prices">
     <div class="wrap">
       <div class="section-head reveal">
@@ -2326,6 +2326,7 @@
       <p class="table-note reveal" data-i18n="pr.note"></p>
     </div>
   </section>
+  ============ /PRICE TABLE ============ -->
 
   <!-- ============ ONE-DAY TOURS ============ -->
   <section class="section" id="oneday">
@@ -2575,7 +2576,7 @@
           <ul>
             <li><a href="#multiday" data-i18n="nav.multiday"></a></li>
             <li><a href="#oneday" data-i18n="nav.oneday"></a></li>
-            <li><a href="#prices" data-i18n="nav.prices"></a></li>
+            <!-- <li><a href="#prices" data-i18n="nav.prices"></a></li> -->
             <li><a href="#builder" data-i18n="nav.builder"></a></li>
           </ul>
         </div>
@@ -3512,6 +3513,7 @@
        ТАБЛИЦЫ ЦЕН
        ============================================================ */
     function renderTables() {
+      if (!document.getElementById('priceTable')) return;   // секция цен отключена
       const days = [2, 3, 4, 5, 6, 7];
       document.getElementById('priceTable').innerHTML = `
         <table class="pt">

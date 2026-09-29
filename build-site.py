@@ -142,5 +142,7 @@ dist.mkdir()
 for lang in LANGS:
     build(lang)
 shutil.copytree(root / "images", dist / "images", ignore=shutil.ignore_patterns(".DS_Store"))
+# Google и браузеры запрашивают /favicon.ico от корня сайта, даже без <link rel="icon">.
+shutil.copy(root / "images/icons/favicon.ico", dist / "favicon.ico")
 sitemap()
-print("sitemap.xml, robots.txt, images/ → dist/")
+print("sitemap.xml, robots.txt, favicon.ico, images/ → dist/")

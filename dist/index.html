@@ -390,7 +390,9 @@
        Фото горы Боқты (/images/hero-bokty.jpg) закомментировано ниже. */
     .hero {
       position: relative;
-      min-height: 88svh;
+      /* не ниже пропорций видео (16:9 → 56.25vw): кадр всегда вписан по высоте,
+         сверху и снизу ничего не обрезается */
+      min-height: max(88svh, 56.25vw);
       display: flex;
       align-items: center;
       /* --hero-photo: url('/images/hero-bokty.jpg'); */
@@ -441,6 +443,7 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
+      transition: opacity .9s ease;
       background:
         linear-gradient(105deg, rgba(251, 248, 241, .93) 0%, rgba(251, 248, 241, .82) 34%, rgba(251, 248, 241, .42) 62%, rgba(251, 248, 241, .18) 100%),
         linear-gradient(180deg, rgba(251, 248, 241, .55) 0%, rgba(251, 248, 241, 0) 30%, rgba(232, 206, 169, .35) 100%);
@@ -466,6 +469,99 @@
       z-index: 2;
       padding: 90px 24px 110px;
       max-width: 828px
+    }
+
+    .hero-content>*:not(.hero-cta),
+    .hero-cta>.btn {
+      transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1), visibility 0s
+    }
+
+    /* «Чистое видео»: текст и вуаль уходят, остаётся только кадр.
+       Включается само, когда посетитель не двигается, и кнопкой .hero-toggle */
+    .hero.is-clean::before {
+      opacity: 0
+    }
+
+    .hero.is-clean .hero-content>*:not(.hero-cta),
+    .hero.is-clean .hero-cta>.btn {
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      /* после затухания — и с клавиатуры недоступно */
+      visibility: hidden;
+      transition-delay: 0s, 0s, .7s
+    }
+
+    /* стоит в ряду с кнопками туров и остаётся на месте, когда текст уходит */
+    .hero-toggle {
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      padding: 14px 18px 14px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(14, 42, 48, .16);
+      background: rgba(255, 255, 255, .5);
+      -webkit-backdrop-filter: blur(12px) saturate(1.3);
+      backdrop-filter: blur(12px) saturate(1.3);
+      color: var(--ink);
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: background .5s, border-color .5s, color .5s, opacity .6s, transform .2s
+    }
+
+    .hero-toggle:hover {
+      background: rgba(255, 255, 255, .8);
+      border-color: rgba(14, 42, 48, .34);
+      transform: translateY(-1px)
+    }
+
+    /* на чистом видео — тёмное стекло */
+    .hero.is-clean .hero-toggle {
+      background: rgba(6, 26, 30, .42);
+      border-color: rgba(255, 255, 255, .34);
+      color: #fff
+    }
+
+    .hero.is-clean .hero-toggle:hover {
+      background: rgba(6, 26, 30, .62);
+      border-color: rgba(255, 255, 255, .7)
+    }
+
+    .hero-toggle:focus-visible {
+      outline: 2px solid var(--apricot);
+      outline-offset: 3px
+    }
+
+    .hero-toggle svg {
+      display: block;
+      width: 17px;
+      height: 17px;
+      flex: none
+    }
+
+    .hero-toggle .ht-state {
+      display: inline-flex;
+      align-items: center;
+      gap: .55em
+    }
+
+    .hero-toggle .ht-show,
+    .hero.is-clean .hero-toggle .ht-hide {
+      display: none
+    }
+
+    .hero.is-clean .hero-toggle .ht-show {
+      display: inline-flex
+    }
+
+    /* пока идёт чистое видео, кнопка не спорит с кадром */
+    .hero.is-clean .hero-toggle:not(:hover):not(:focus-visible) {
+      opacity: .72
     }
 
     .hero .eyebrow {
@@ -2357,6 +2453,22 @@
       <div class="hero-cta">
         <a class="btn" href="#multiday" data-i18n="hero.btn1">Многодневные туры</a>
         <a class="btn ghost" href="#oneday" data-i18n="hero.btn2">Однодневные туры</a>
+        <!-- переключатель «текст / чистое видео» -->
+        <button class="hero-toggle" id="heroToggle" type="button">
+          <span class="ht-state ht-hide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span data-i18n="hero.watch">Смотреть видео</span>
+          </span>
+          <span class="ht-state ht-show">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h10"></path>
+            </svg>
+            <span data-i18n="hero.showText">Показать текст</span>
+          </span>
+        </button>
       </div>
       <div class="hero-badges">
         <div><b data-i18n="hero.b1n">5 лет</b><span data-i18n="hero.b1t">опыта в пустынных экспедициях</span></div>
@@ -3131,6 +3243,8 @@
         'Visit Aktau 是曼吉斯套州的持牌本地旅行社，提供前往博兹吉拉、图兹拜尔、舍尔卡拉山和地下清真寺的私人及团队越野车之旅——一日游或 2 至 7 天多日游。所有行程均从里海之滨的阿克陶出发。'],
       'hero.btn1': ['Многодневные туры', 'Көп күндік турлар', 'Multi-day tours', '多日游线路'],
       'hero.btn2': ['Однодневные туры', 'Бір күндік турлар', 'Day tours', '一日游线路'],
+      'hero.watch': ['Смотреть видео', 'Бейнені көру', 'Watch video', '观看视频'],
+      'hero.showText': ['Показать текст', 'Мәтінді көрсету', 'Show text', '显示文字'],
       'hero.b1n': ['5 лет', '5 жыл', '5 years', '5 年'],
       'hero.b1t': ['опыта в пустынных экспедициях', 'шөл экспедицияларындағы тәжірибе', 'of desert expedition experience', '沙漠探险经验'],
       'hero.b2n': ['20+', '20+', '20+', '20+'],
@@ -4419,6 +4533,45 @@
         document.body.classList.remove('nav-open');
       })
     );
+
+    /* ============================================================
+       ПЕРВЫЙ ЭКРАН: ТЕКСТ / ЧИСТОЕ ВИДЕО
+       Пока посетитель не двигается и видео играет — текст уходит.
+       Вернуть его можно только кнопкой; она же скрывает текст сразу.
+       ============================================================ */
+    (() => {
+      const hero = document.getElementById('top');
+      const video = hero.querySelector('.hero-video');
+      const content = hero.querySelector('.hero-content');
+      const btn = document.getElementById('heroToggle');
+      const IDLE_MS = 3000;
+      const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let timer;
+
+      const isClean = () => hero.classList.contains('is-clean');
+      const setClean = on => hero.classList.toggle('is-clean', on);
+      // кнопка лежит внутри блока текста, но к тексту не относится
+      const inText = el => content.contains(el) && !btn.contains(el);
+      const canAutoHide = () => !calm && !video.paused && video.readyState > 2
+        && !content.matches(':hover') && !inText(document.activeElement)
+        && !document.body.classList.contains('nav-open');
+      const arm = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { if (canAutoHide()) setClean(true); else arm(); }, IDLE_MS);
+      };
+
+      // движение только откладывает скрытие; скрытый текст оно не возвращает
+      ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'keydown', 'scroll'].forEach(ev =>
+        window.addEventListener(ev, () => { if (!isClean()) arm(); }, { passive: true }));
+
+      btn.addEventListener('click', () => {
+        setClean(!isClean());
+        if (isClean()) clearTimeout(timer); else arm();
+      });
+
+      setClean(false);
+      arm();
+    })();
   </script>
 
 

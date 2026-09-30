@@ -1,7 +1,7 @@
 """Собирает сайт для публикации в папку dist/ — по отдельной странице на язык:
 
-    dist/index.html      русский (главная)
-    dist/kk/index.html   қазақша
+    dist/index.html      қазақша (главная)
+    dist/ru/index.html   русский
     dist/en/index.html   English
     dist/zh/index.html   中文
 
@@ -23,8 +23,8 @@ CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacO
 SITE = re.search(r"const SITE_URL = '([^']+)'", src).group(1)
 assert SITE.endswith("/"), SITE
 
-LANGS = ["ru", "kk", "en", "zh"]
-PATH = {"ru": "", "kk": "kk/", "en": "en/", "zh": "zh/"}
+LANGS = ["kk", "ru", "en", "zh"]
+PATH = {"kk": "", "ru": "ru/", "en": "en/", "zh": "zh/"}   # как LANG_PATH в index.html
 OG_LOCALE = {"ru": "ru_RU", "kk": "kk_KZ", "en": "en_US", "zh": "zh_CN"}
 X_DEFAULT = "en"          # для языков, которых на сайте нет
 OG_IMAGE = "images/hero-bokty-sm.jpg"   # 1200×675
@@ -120,6 +120,20 @@ def build(lang):
     print(f"{lang}: {out.relative_to(root)}  {len(page) // 1024} KB  «{title}»")
 
 
+def old_kk_redirect():
+    """Раньше казахская версия жила на /kk/ — старые ссылки ведём на главную."""
+    out = dist / "kk" / "index.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        '<!DOCTYPE html>\n<html lang="kk">\n<head>\n  <meta charset="utf-8">\n'
+        '  <title>Visit Aktau</title>\n'
+        f'  <link rel="canonical" href="{SITE}">\n'
+        '  <meta name="robots" content="noindex, follow">\n'
+        '  <meta http-equiv="refresh" content="0; url=/">\n'
+        "  <script>location.replace('/' + location.hash)</script>\n"
+        '</head>\n<body><a href="/">Visit Aktau</a></body>\n</html>\n', encoding="utf-8")
+
+
 def sitemap():
     today = datetime.date.today().isoformat()
     alts = "".join(
@@ -142,6 +156,7 @@ if dist.exists():
 dist.mkdir()
 for lang in LANGS:
     build(lang)
+old_kk_redirect()
 shutil.copytree(root / "images", dist / "images", ignore=shutil.ignore_patterns(".DS_Store"))
 shutil.copytree(root / "video", dist / "video", ignore=shutil.ignore_patterns(".DS_Store"))
 # Google и браузеры запрашивают /favicon.ico от корня сайта, даже без <link rel="icon">.

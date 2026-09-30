@@ -5,8 +5,8 @@
   <title>曼吉斯套旅游（阿克陶出发）— 越野车之旅与 4×4 租车 | Visit Aktau</title>
   <meta name="description" content="从阿克陶出发的曼吉斯套越野车之旅：前往博兹吉拉、图兹拜尔和舍尔卡拉山的一日游及 2–7 天多日游，由本地持牌旅行社运营。另提供带露营装备的 4×4 自驾租车。">
   <link rel="canonical" href="https://visitaqtau.kz/zh/">
-  <link rel="alternate" hreflang="ru" href="https://visitaqtau.kz/">
-  <link rel="alternate" hreflang="kk" href="https://visitaqtau.kz/kk/">
+  <link rel="alternate" hreflang="kk" href="https://visitaqtau.kz/">
+  <link rel="alternate" hreflang="ru" href="https://visitaqtau.kz/ru/">
   <link rel="alternate" hreflang="en" href="https://visitaqtau.kz/en/">
   <link rel="alternate" hreflang="zh" href="https://visitaqtau.kz/zh/">
   <link rel="alternate" hreflang="x-default" href="https://visitaqtau.kz/en/">
@@ -21,8 +21,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="675">
   <meta property="og:locale" content="zh_CN">
-  <meta property="og:locale:alternate" content="ru_RU">
   <meta property="og:locale:alternate" content="kk_KZ">
+  <meta property="og:locale:alternate" content="ru_RU">
   <meta property="og:locale:alternate" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="曼吉斯套旅游（阿克陶出发）— 越野车之旅与 4×4 租车 | Visit Aktau">
@@ -2427,8 +2427,8 @@
         <li class="cta-btn"><a class="btn" href="#builder" data-i18n="nav.cta">为我推荐</a></li>
       </ul>
       <div class="langsel" id="langSel">
-        <a href="/" data-lang="ru" hreflang="ru" lang="ru">RU</a>
-        <a href="/kk/" data-lang="kk" hreflang="kk" lang="kk">ҚАЗ</a>
+        <a href="/" data-lang="kk" hreflang="kk" lang="kk">ҚАЗ</a>
+        <a href="/ru/" data-lang="ru" hreflang="ru" lang="ru">RU</a>
         <a href="/en/" data-lang="en" hreflang="en" lang="en">EN</a>
         <a href="/zh/" data-lang="zh" hreflang="zh" lang="zh" class="on">中文</a>
       </div>
@@ -4157,7 +4157,7 @@
        SCHEMA.ORG (JSON-LD) — туры, аренда и FAQ для поисковиков
        ============================================================ */
     function renderLd() {
-      const url = SITE_URL + (li === 0 ? '' : LANGS[li] + '/');
+      const url = SITE_URL + LANG_PATH[LANGS[li]].slice(1);
       const org = { '@id': SITE_URL + '#org' };
       const stops = keys => ({
         '@type': 'ItemList',
@@ -4467,11 +4467,12 @@
       renderAll();
     }
 
-    // Собранные build-site.py страницы (/, /kk/, /en/, /zh/) несут data-page-lang:
+    // Собранные build-site.py страницы (/, /ru/, /en/, /zh/) несут data-page-lang:
     // язык задан адресом, а переключатель — обычная ссылка на другую версию.
     // Исходный index.html без атрибута переключает язык на месте.
     const PAGE_LANG = document.documentElement.dataset.pageLang;
-    const LANG_PATH = { ru: '/', kk: '/kk/', en: '/en/', zh: '/zh/' };
+    // Главная (/) — казахская; русская версия живёт на /ru/.
+    const LANG_PATH = { kk: '/', ru: '/ru/', en: '/en/', zh: '/zh/' };
 
     document.getElementById('langSel').addEventListener('click', e => {
       const b = e.target.closest('[data-lang]');
@@ -4485,11 +4486,11 @@
       setLang(b.dataset.lang);
     });
 
-    // Начальный язык: адрес страницы → сохранённый выбор → язык браузера → русский
+    // Начальный язык: адрес страницы → сохранённый выбор → казахский
     (function initLang() {
       if (PAGE_LANG) {
         // С корня возвращаем на ранее выбранную версию. Язык браузера
-        // здесь не учитываем: поисковые роботы должны видеть русскую главную.
+        // здесь не учитываем: поисковые роботы должны видеть казахскую главную.
         let saved = null;
         try { saved = localStorage.getItem('va_lang'); } catch (e) { }
         if (location.pathname === '/' && saved && saved !== PAGE_LANG && LANG_PATH[saved]) {
@@ -4500,10 +4501,7 @@
       }
       let code = null;
       try { code = localStorage.getItem('va_lang'); } catch (e) { }
-      if (!LANGS.includes(code)) {
-        const nav = (navigator.language || 'ru').toLowerCase();
-        code = nav.startsWith('kk') ? 'kk' : nav.startsWith('zh') ? 'zh' : nav.startsWith('en') ? 'en' : 'ru';
-      }
+      if (!LANGS.includes(code)) code = 'kk';
       setLang(code, false);
     })();
 

@@ -104,7 +104,8 @@ def head_tags(lang, title, desc):
 def build(lang):
     page = drop_reveal_state(render(lang))
     # /kk/, /en/, /zh/ лежат во вложенных папках — картинки берём от корня сайта.
-    page = re.sub(r"""(?<=["'(\s,])images/""", "/images/", page)
+    # (video/ — только пути к файлам, а не MIME-тип type="video/mp4")
+    page = re.sub(r"""(?<=["'(\s,])(images|video)/(?!mp4["'])""", r"/\1/", page)
 
     title = htmlmod.unescape(re.search(r"<title>(.*?)</title>", page, re.S).group(1))
     m = re.search(r'<meta name="description"[^>]*>', page, re.S)
@@ -142,7 +143,8 @@ dist.mkdir()
 for lang in LANGS:
     build(lang)
 shutil.copytree(root / "images", dist / "images", ignore=shutil.ignore_patterns(".DS_Store"))
+shutil.copytree(root / "video", dist / "video", ignore=shutil.ignore_patterns(".DS_Store"))
 # Google и браузеры запрашивают /favicon.ico от корня сайта, даже без <link rel="icon">.
 shutil.copy(root / "images/icons/favicon.ico", dist / "favicon.ico")
 sitemap()
-print("sitemap.xml, robots.txt, favicon.ico, images/ → dist/")
+print("sitemap.xml, robots.txt, favicon.ico, images/, video/ → dist/")

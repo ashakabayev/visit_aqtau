@@ -10,8 +10,10 @@
   <link rel="icon" href="images/icons/favicon.ico" sizes="48x48">
   <link rel="icon" href="images/icons/icon-192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="images/icons/apple-touch-icon.png">
+  <!-- фото-фон первого экрана отключён — вместо него видео (video/hero.mp4)
   <link rel="preload" as="image" href="images/hero-bokty.jpg"
     imagesrcset="images/hero-bokty-sm.jpg 1200w, images/hero-bokty.jpg 2200w" imagesizes="100vw">
+  -->
   <script type="application/ld+json" id="ldJson"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -365,21 +367,31 @@
     }
 
     /* ---------- Hero ---------- */
-    /* Первый экран — фото горы Боқты фоном.
-       Файл: images/hero-bokty.jpg (+ webp и мобильная версия -sm). */
+    /* Первый экран — видео фоном (video/hero.mp4, мобильная версия -sm).
+       Фото горы Боқты (images/hero-bokty.jpg) закомментировано ниже. */
     .hero {
       position: relative;
       min-height: 88svh;
       display: flex;
       align-items: center;
-      --hero-photo: url('images/hero-bokty.jpg');
+      /* --hero-photo: url('images/hero-bokty.jpg'); */
       background:
-        var(--hero-photo, none) center/cover no-repeat,
+        /* var(--hero-photo, none) center/cover no-repeat, */
         linear-gradient(180deg, #FBF8F1 0%, #F6EAD6 42%, #F0DCC0 72%, #E8CEA9 100%);
       overflow: hidden;
       color: var(--ink);
     }
 
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none
+    }
+
+    /* Фото-фон отключён:
     @media (max-width:900px) {
       .hero {
         --hero-photo: url('images/hero-bokty-sm.jpg');
@@ -387,7 +399,7 @@
       }
     }
 
-    /* WebP там, где браузер его поддерживает */
+    WebP там, где браузер его поддерживает
     @supports (background-image: image-set(url('images/hero-bokty.webp') type('image/webp'))) {
       .hero {
         --hero-photo: image-set(url('images/hero-bokty.webp') type('image/webp'),
@@ -401,6 +413,7 @@
         }
       }
     }
+    */
 
     /* Светлая вуаль поверх фото, чтобы текст всегда читался */
     .hero::before {
@@ -2313,7 +2326,12 @@
 
   <!-- ============ HERO ============ -->
   <header class="hero" id="top">
-    <!-- фон первого экрана — фото горы Боқты (images/hero-bokty.jpg) -->
+    <!-- фон первого экрана — видео (раньше было фото горы Боқты, images/hero-bokty.jpg) -->
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="video/hero-poster.jpg"
+      aria-hidden="true">
+      <source src="video/hero-sm.mp4" type="video/mp4" media="(max-width:900px)">
+      <source src="video/hero.mp4" type="video/mp4">
+    </video>
 
     <div class="wrap hero-content">
       <p class="eyebrow" data-i18n="hero.eyebrow"></p>
